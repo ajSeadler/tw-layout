@@ -3,7 +3,7 @@ import React from "react";
 const HeroSection: React.FC = () => {
   return (
     <section
-      className="relative w-full h-[80vh] flex items-center justify-center bg-cover bg-center"
+      className="relative w-full h-[100vh] flex items-center justify-center bg-cover bg-center"
       style={{
         backgroundImage:
           "url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Barns_grand_tetons.jpg/1200px-Barns_grand_tetons.jpg')",

@@ -9,52 +9,69 @@ type Park = {
   images: { url: string; altText: string }[];
 };
 
+const API_KEY = "5H2kKAyTFXd4yA6xZOSJgLbS6ocDzs8a1j37kQU1";
+
 const NationalParks: React.FC = () => {
   const [popularParks, setPopularParks] = useState<Park[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<Park[]>([]);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(0);
+  const perPage = 6;
 
-  const API_KEY = "5H2kKAyTFXd4yA6xZOSJgLbS6ocDzs8a1j37kQU1";
   const navigate = useNavigate();
 
-  const fetchParks = async (query = "") => {
+  const fetchSearchResults = async (query: string) => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `https://developer.nps.gov/api/v1/parks?q=${query}&limit=6&api_key=${API_KEY}`
+      const res = await fetch(
+        `https://developer.nps.gov/api/v1/parks?q=${query}&limit=50&api_key=${API_KEY}`
       );
-      const data = await response.json();
+      const data = await res.json();
       return data.data;
     } catch (error) {
-      console.error("Failed to fetch parks:", error);
+      console.error("Search failed:", error);
       return [];
     } finally {
       setLoading(false);
     }
   };
 
+  const fetchPopularParks = async () => {
+    const codes = ["yell", "yose", "grca", "zion", "acad", "romo"];
+    const results = await Promise.all(
+      codes.map((code) =>
+        fetch(
+          `https://developer.nps.gov/api/v1/parks?parkCode=${code}&api_key=${API_KEY}`
+        ).then((res) => res.json())
+      )
+    );
+    setPopularParks(results.map((r) => r.data[0]));
+  };
+
   useEffect(() => {
-    const loadPopular = async () => {
-      const codes = ["yell", "yose", "grca", "zion", "acad", "romo"]; // 6 popular parks
-      const results = await Promise.all(
-        codes.map((code) =>
-          fetch(
-            `https://developer.nps.gov/api/v1/parks?parkCode=${code}&api_key=${API_KEY}`
-          ).then((res) => res.json())
-        )
-      );
-      const parks = results.map((r) => r.data[0]);
-      setPopularParks(parks);
-    };
-    loadPopular();
+    fetchPopularParks();
   }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    const results = await fetchParks(searchTerm);
+    const results = await fetchSearchResults(searchTerm);
     setSearchResults(results);
+    setPage(0); // reset to first page
   };
+
+  const handlePaginate = (direction: "prev" | "next") => {
+    setPage((prev) =>
+      direction === "next"
+        ? Math.min(prev + 1, Math.floor(searchResults.length / perPage))
+        : Math.max(prev - 1, 0)
+    );
+  };
+
+  const visibleResults = searchResults.slice(
+    page * perPage,
+    page * perPage + perPage
+  );
 
   const renderParkCard = (park: Park) => (
     <div
@@ -82,7 +99,7 @@ const NationalParks: React.FC = () => {
   return (
     <>
       <div className="p-6 bg-[rgb(var(--background))]">
-        <div className="max-w-5xl w-full mx-auto">
+        <div className="max-w-5xl mx-auto">
           <h1 className="text-3xl font-bold text-[rgb(var(--copy-primary))] mb-4">
             U.S. National Parks Explorer
           </h1>
@@ -94,7 +111,7 @@ const NationalParks: React.FC = () => {
             <input
               type="text"
               placeholder="Search parks by name or location"
-              className="flex-1 w-full px-4 py-2 rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--card))] text-[rgb(var(--copy-primary))] placeholder-[rgb(var(--copy-secondary))] focus:outline-none"
+              className="flex-1 px-4 py-2 rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--card))] text-[rgb(var(--copy-primary))] placeholder-[rgb(var(--copy-secondary))] focus:outline-none"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -115,11 +132,34 @@ const NationalParks: React.FC = () => {
               <h2 className="text-2xl font-semibold text-[rgb(var(--copy-primary))] mb-3">
                 {searchResults.length > 0 ? "Search Results" : "Popular Parks"}
               </h2>
+
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {(searchResults.length > 0 ? searchResults : popularParks).map(
+                {(searchResults.length > 0 ? visibleResults : popularParks).map(
                   renderParkCard
                 )}
               </div>
+
+              {/* Pagination */}
+              {searchResults.length > perPage && (
+                <div className="flex justify-center gap-4 mt-6">
+                  <button
+                    onClick={() => handlePaginate("prev")}
+                    disabled={page === 0}
+                    className="px-4 py-2 rounded-lg bg-[rgb(var(--card))] border border-[rgb(var(--border))] text-[rgb(var(--copy-secondary))] hover:bg-[rgb(var(--border))] disabled:opacity-50"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    onClick={() => handlePaginate("next")}
+                    disabled={
+                      page >= Math.floor(searchResults.length / perPage)
+                    }
+                    className="px-4 py-2 rounded-lg bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))]"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
             </>
           )}
         </div>
