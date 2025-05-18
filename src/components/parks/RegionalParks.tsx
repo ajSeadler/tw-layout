@@ -65,7 +65,7 @@ const RegionalParks: React.FC = () => {
   const handlePrev = () => fetchParks(region, Math.max(0, start - limit));
 
   return (
-    <section className="bg-[rgb(var(--background))] text-[rgb(var(--copy-primary))] py-16 px-6">
+    <section className="bg-[rgb(var(--background))] text-[rgb(var(--copy-primary))]  px-6">
       <div className="max-w-5xl mx-auto">
         <h2 className="text-3xl font-bold mb-6">Explore by Region</h2>
 
