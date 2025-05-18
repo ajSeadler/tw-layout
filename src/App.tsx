@@ -2,6 +2,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DefaultLayout } from "./layouts/DefaultLayout";
 import HomePage from "./pages/HomePage";
 import ParkDetail from "./components/parks/ParkDetail";
+import TripSummary from "./components/parks/TripSummary";
+import PlanPage from "./pages/PlanPage";
+import ParksPage from "./pages/ParksPage";
+import AboutPage from "./pages/AboutPage";
 
 export default function App() {
   return (
@@ -9,7 +13,11 @@ export default function App() {
       <DefaultLayout>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/park/:id" element={<ParkDetail />} />\
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/park/:id" element={<ParkDetail />} />
+          <Route path="/planner" element={<PlanPage />} />
+          <Route path="/summary" element={<TripSummary />} />
+          <Route path="/parks" element={<ParksPage />} />
         </Routes>
       </DefaultLayout>
     </BrowserRouter>
