@@ -59,7 +59,6 @@ const NationalParks: React.FC = () => {
   const renderParkCard = (park: Park) => (
     <div
       key={park.id}
-      id="explore"
       onClick={() => navigate(`/park/${park.id}`)}
       className="cursor-pointer transition hover:shadow-md rounded-2xl p-4 bg-[rgb(var(--card))] border border-[rgb(var(--border))] shadow-sm"
     >
@@ -82,7 +81,7 @@ const NationalParks: React.FC = () => {
 
   return (
     <>
-      <div className="p-6 bg-[rgb(var(--background))] min-h-screen">
+      <div className="p-6 bg-[rgb(var(--background))]">
         <div className="max-w-5xl w-full mx-auto">
           <h1 className="text-3xl font-bold text-[rgb(var(--copy-primary))] mb-4">
             U.S. National Parks Explorer
