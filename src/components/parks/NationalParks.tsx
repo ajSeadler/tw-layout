@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import RegionalParks from "./RegionalParks";
 
 type Park = {
   id: string;
@@ -58,6 +59,7 @@ const NationalParks: React.FC = () => {
   const renderParkCard = (park: Park) => (
     <div
       key={park.id}
+      id="explore"
       onClick={() => navigate(`/park/${park.id}`)}
       className="cursor-pointer transition hover:shadow-md rounded-2xl p-4 bg-[rgb(var(--card))] border border-[rgb(var(--border))] shadow-sm"
     >
@@ -79,47 +81,52 @@ const NationalParks: React.FC = () => {
   );
 
   return (
-    <div className="p-6 bg-[rgb(var(--background))] min-h-screen">
-      <div className="max-w-5xl w-full mx-auto">
-        <h1 className="text-3xl font-bold text-[rgb(var(--copy-primary))] mb-4">
-          U.S. National Parks Explorer
-        </h1>
+    <>
+      <div className="p-6 bg-[rgb(var(--background))] min-h-screen">
+        <div className="max-w-5xl w-full mx-auto">
+          <h1 className="text-3xl font-bold text-[rgb(var(--copy-primary))] mb-4">
+            U.S. National Parks Explorer
+          </h1>
 
-        <form
-          onSubmit={handleSearch}
-          className="mb-6 flex flex-col sm:flex-row gap-2"
-        >
-          <input
-            type="text"
-            placeholder="Search parks by name or location"
-            className="flex-1 w-full px-4 py-2 rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--card))] text-[rgb(var(--copy-primary))] placeholder-[rgb(var(--copy-secondary))] focus:outline-none"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button
-            type="submit"
-            className="px-5 py-2 rounded-xl bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))] font-semibold w-full sm:w-auto"
+          <form
+            onSubmit={handleSearch}
+            className="mb-6 flex flex-col sm:flex-row gap-2"
           >
-            Search
-          </button>
-        </form>
+            <input
+              type="text"
+              placeholder="Search parks by name or location"
+              className="flex-1 w-full px-4 py-2 rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--card))] text-[rgb(var(--copy-primary))] placeholder-[rgb(var(--copy-secondary))] focus:outline-none"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="px-5 py-2 rounded-xl bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))] font-semibold w-full sm:w-auto"
+            >
+              Search
+            </button>
+          </form>
 
-        {loading ? (
-          <p className="text-[rgb(var(--copy-secondary))]">Loading parks...</p>
-        ) : (
-          <>
-            <h2 className="text-2xl font-semibold text-[rgb(var(--copy-primary))] mb-3">
-              {searchResults.length > 0 ? "Search Results" : "Popular Parks"}
-            </h2>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {(searchResults.length > 0 ? searchResults : popularParks).map(
-                renderParkCard
-              )}
-            </div>
-          </>
-        )}
+          {loading ? (
+            <p className="text-[rgb(var(--copy-secondary))]">
+              Loading parks...
+            </p>
+          ) : (
+            <>
+              <h2 className="text-2xl font-semibold text-[rgb(var(--copy-primary))] mb-3">
+                {searchResults.length > 0 ? "Search Results" : "Popular Parks"}
+              </h2>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {(searchResults.length > 0 ? searchResults : popularParks).map(
+                  renderParkCard
+                )}
+              </div>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+      <RegionalParks />
+    </>
   );
 };
 

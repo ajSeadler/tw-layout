@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DefaultLayout } from "./layouts/DefaultLayout";
 import HomePage from "./pages/HomePage";
-import ParkDetail from "./components/ParkDetail";
+import ParkDetail from "./components/parks/ParkDetail";
 
 export default function App() {
   return (

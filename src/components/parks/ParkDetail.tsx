@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ParkImageCarousel } from "./ParkImagesCarousel";
+import { ParkImageCarousel } from "../parks/ParkImagesCarousel";
 import { ArrowLeft, ExternalLink } from "lucide-react";
-import EntranceFeesSection from "./parks/EntranceFeeSection";
+import EntranceFeesSection from "../parks/EntranceFeeSection";
 
 type Park = {
   id: string;
