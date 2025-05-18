@@ -96,7 +96,7 @@ const ParkDetail: React.FC = () => {
         )}
 
         <div className="space-y-10">
-          <section className="grid sm:grid-cols-2 gap-6">
+          <section className="grid sm:grid-cols-2 gap-6 items-start">
             <div className="bg-[rgb(var(--card))] border border-[rgb(var(--border))] p-6 rounded-2xl shadow-sm">
               <h3 className="text-xl font-semibold mb-3">Details</h3>
               <p>
@@ -111,9 +111,7 @@ const ParkDetail: React.FC = () => {
                   width="100%"
                   height="250"
                   className="rounded-lg border-0"
-                  src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBS9_PWMc0SPxL8Pl_EIAWk7vPxh6UDtZY
-           &q=${park.latitude},${park.longitude}
-           &zoom=12`}
+                  src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBS9_PWMc0SPxL8Pl_EIAWk7vPxh6UDtZY&q=${park.latitude},${park.longitude}&zoom=12`}
                   allowFullScreen
                 />
               </div>
@@ -138,6 +136,7 @@ const ParkDetail: React.FC = () => {
                   href={park.directionsUrl}
                   className="text-[rgb(var(--cta))] underline mt-2 inline-block"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   View Map & Directions
                 </a>

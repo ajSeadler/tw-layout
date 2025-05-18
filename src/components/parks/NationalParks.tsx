@@ -38,7 +38,17 @@ const NationalParks: React.FC = () => {
   };
 
   const fetchPopularParks = async () => {
-    const codes = ["yell", "yose", "grca", "zion", "acad", "romo"];
+    const codes = [
+      "yell", // Yellowstone
+      "yose", // Yosemite
+      "grca", // Grand Canyon
+      "zion", // Zion
+      "acad", // Acadia
+      "romo", // Rocky Mountain
+      "glac", // Glacier
+      "olym", // Olympic
+      "ever", // Everglades
+    ];
     const results = await Promise.all(
       codes.map((code) =>
         fetch(
@@ -77,22 +87,31 @@ const NationalParks: React.FC = () => {
     <div
       key={park.id}
       onClick={() => navigate(`/park/${park.id}`)}
-      className="cursor-pointer transition hover:shadow-md rounded-2xl p-4 bg-[rgb(var(--card))] border border-[rgb(var(--border))] shadow-sm"
+      className="rounded-2xl overflow-hidden bg-[rgb(var(--card))] border border-[rgb(var(--border))] shadow transition hover:shadow-md cursor-pointer"
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          navigate(`/park/${park.id}`);
+        }
+      }}
     >
       {park.images[0] && (
         <img
           src={park.images[0].url}
           alt={park.images[0].altText}
           loading="lazy"
-          className="w-full h-48 object-cover rounded-xl mb-3"
+          className="h-48 w-full object-cover"
         />
       )}
-      <h3 className="text-xl font-semibold text-[rgb(var(--copy-primary))] mb-1">
-        {park.fullName}
-      </h3>
-      <p className="text-sm text-[rgb(var(--copy-secondary))]">
-        {park.description.slice(0, 120)}...
-      </p>
+      <div className="p-4">
+        <h3 className="text-xl font-semibold mb-1 text-[rgb(var(--copy-primary))]">
+          {park.fullName}
+        </h3>
+        <p className="text-sm text-[rgb(var(--copy-secondary))]">
+          {park.description.slice(0, 110)}...
+        </p>
+      </div>
     </div>
   );
 

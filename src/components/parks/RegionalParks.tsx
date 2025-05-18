@@ -36,7 +36,7 @@ const RegionalParks: React.FC = () => {
   const [parks, setParks] = useState<Park[]>([]);
   const [start, setStart] = useState(0);
   const [loading, setLoading] = useState(false);
-  const limit = 6;
+  const limit = 9;
 
   const navigate = useNavigate();
 
