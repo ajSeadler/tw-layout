@@ -65,6 +65,7 @@ const NationalParks: React.FC = () => {
         <img
           src={park.images[0].url}
           alt={park.images[0].altText}
+          loading="lazy"
           className="w-full h-48 object-cover rounded-xl mb-3"
         />
       )}

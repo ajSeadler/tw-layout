@@ -111,6 +111,7 @@ export function ParkImageCarousel({
           <img
             src={images[index].url}
             alt={images[index].altText}
+            loading="lazy"
             className="max-h-full max-w-full object-contain"
           />
         </div>
