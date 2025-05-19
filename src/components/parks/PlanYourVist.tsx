@@ -67,7 +67,7 @@ const PlanYourVisit: React.FC = () => {
   return (
     <section className="bg-[rgb(var(--background))] text-[rgb(var(--copy-primary))] py-16 px-6">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold mb-4">Plan Your Visit</h2>
+        <h2 className="text-3xl font-bold mb-4">Park Alerts</h2>
         <p className="text-[rgb(var(--copy-secondary))] mb-8">
           Search park alerts by name, state code, or alert category.
         </p>
