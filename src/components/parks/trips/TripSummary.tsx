@@ -40,6 +40,10 @@ type TripSummaryState = {
   startDate: Date | null;
   endDate: Date | null;
   totalDistance: number;
+  startLocation?: {
+    latitude: number;
+    longitude: number;
+  };
   budgetInputs: {
     lodgingPerNight: number;
     parkFees: number;
@@ -203,10 +207,7 @@ const TripSummary: React.FC = () => {
     <div className="min-h-screen bg-[rgb(var(--background))] text-[rgb(var(--copy-primary))] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto space-y-12">
         <header className="text-center space-y-2">
-          <h1 className="text-5xl font-extrabold tracking-tight">
-            Your Adventure Awaits
-          </h1>
-          <p className="text-lg text-[rgb(var(--copy-secondary))]">
+          <p className="text-lg font-semibold text-[rgb(var(--cta))]">
             A complete overview of all your planned national park stops.
           </p>
         </header>
