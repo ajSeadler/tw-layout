@@ -10,7 +10,6 @@ import { differenceInCalendarDays } from "date-fns";
 import TripMetaSummary from "./TripMetaSummary";
 import ParkCardDetails from "./ParkCardDetails";
 import PackingSuggestions from "./PackingSuggestions";
-import BudgetEstimator from "./BudgetEstimator";
 import { Loader, MapPin, Navigation2 } from "lucide-react";
 
 const OPENWEATHER_KEY = import.meta.env.VITE_OPENWEATHER_KEY as string;
@@ -354,16 +353,18 @@ const TripSummary: React.FC = () => {
           </div>
         ) : (
           <>
-            {/* Summary cards */}
-            <TripMetaSummary
-              startDate={state.startDate}
-              endDate={state.endDate}
-              totalNights={state.totalNights}
-              numParks={state.itinerary.length}
-              totalDistance={state.totalDistance}
-              estimatedBudget={state.estimatedBudget}
-              startToFirst={state.startToFirst}
-            />
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Summary cards */}
+              <TripMetaSummary
+                startDate={state.startDate}
+                endDate={state.endDate}
+                totalNights={state.totalNights}
+                numParks={state.itinerary.length}
+                totalDistance={state.totalDistance}
+                startToFirst={state.startToFirst}
+              />
+              <PackingSuggestions itinerary={state.itinerary} />
+            </section>
 
             {/* Park details */}
             <section className="grid gap-8">
@@ -377,15 +378,6 @@ const TripSummary: React.FC = () => {
             </section>
 
             {/* Packing & budget */}
-            <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <PackingSuggestions itinerary={state.itinerary} />
-              <BudgetEstimator
-                budgetInputs={state.budgetInputs}
-                onChange={(inputs) =>
-                  setState((s) => ({ ...s, budgetInputs: inputs }))
-                }
-              />
-            </section>
 
             {/* Edit button */}
             <div className="text-center">

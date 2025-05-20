@@ -8,10 +8,10 @@ const VisitPromoCard: React.FC = () => {
   return (
     <section
       onClick={() => navigate("/planner")}
-      className="relative w-screen h-[500px] mx-auto overflow-hidden cursor-pointer transition-shadow duration-300 hover:shadow-xl"
+      className="relative w-screen  mx-auto overflow-hidden cursor-pointer transition-shadow duration-300 hover:shadow-xl"
       aria-label="Plan Your Visit Promotion"
       style={{
-        backgroundImage: `url("src/assets/images/j-tree.jpg")`,
+        backgroundImage: `url("/j-tree.jpg")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
