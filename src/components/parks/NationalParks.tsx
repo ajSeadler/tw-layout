@@ -119,9 +119,9 @@ const NationalParks: React.FC = () => {
     <>
       <div className="p-6 bg-[rgb(var(--background))]">
         <div className="max-w-5xl mx-auto">
-          <h1 className="text-3xl font-bold text-[rgb(var(--copy-primary))] mb-4">
-            U.S. National Parks Explorer
-          </h1>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-(var--cta-text) drop-shadow-lg">
+            Parks Explorer
+          </h2>
 
           <form
             onSubmit={handleSearch}
