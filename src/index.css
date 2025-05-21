@@ -98,24 +98,26 @@
 /* after your existing .quantum */
 
 .sunset {
-  --background: 255, 94, 77;
-  /* Warm coral */
-  --border: 255, 150, 120;
-  /* Soft peach outline */
-  --card: 255, 255, 240;
-  /* Light cream surface */
-  --copy-primary: 50, 20, 15;
-  /* Deep burnt umber */
-  --copy-secondary: 120, 80, 70;
-  /* Muted terracotta */
-  --cta: 255, 165, 0;
-  /* Vibrant orange */
-  --cta-active: 230, 140, 0;
-  /* Darker orange on hover */
+  --background: 255, 244, 235;
+  /* Soft warm ivory background */
+  --border: 255, 180, 150;
+  /* Softer peach for borders */
+  --card: 255, 252, 245;
+  /* Subtle cream surface for cards */
+  --copy-primary: 40, 20, 10;
+  /* Deep espresso (good contrast) */
+  --copy-secondary: 100, 60, 50;
+  /* Rich terracotta (muted but legible) */
+  --cta: 255, 140, 0;
+  /* Warm vivid orange */
+  --cta-active: 220, 110, 0;
+  /* Slightly darker on hover */
   --cta-text: 255, 255, 255;
-  /* White text */
-  background: rgba(var(--background));
+  /* Always white text on buttons */
+
+  background: rgba(var(--background), 1);
 }
+
 
 .forest {
   --background: 36, 46, 36;

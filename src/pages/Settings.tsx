@@ -2,10 +2,11 @@ import { useMemo } from "react";
 import { useTheme, type ThemeMode } from "../hooks/useTheme";
 import { PALETTES } from "../themePalettes";
 import BackButton from "../components/test/BackButton";
-import MaxProfile from "../components/settings/MaxProfile";
-import Training from "../components/settings/Training";
-import Newsletter from "../components/settings/Newsletter";
-import Traits from "../components/settings/Traits";
+
+import WildlifeSpotlight from "../components/settings/WildlifeSpotlight";
+import BisonHabitat from "../components/settings/BisonHabitat";
+import BisonPhysicalCard from "../components/settings/BisonPhysicalCard";
+import BisonConservationStatus from "../components/settings/BisonConservationStatus";
 
 const OPTIONS = (Object.keys(PALETTES) as ThemeMode[]).map((name) => ({
   name,
@@ -131,10 +132,10 @@ export default function Settings() {
 
               {/* Components Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <MaxProfile />
-                <Training />
-                <Newsletter />
-                <Traits />
+                <WildlifeSpotlight />
+                <BisonHabitat />
+                <BisonPhysicalCard />
+                <BisonConservationStatus />
               </div>
             </div>
           </div>

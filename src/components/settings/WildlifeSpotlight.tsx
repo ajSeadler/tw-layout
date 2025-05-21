@@ -1,40 +1,43 @@
-const MaxProfile = () => {
+const WildlifeSpotlight = () => {
   return (
     <section
-      aria-label="Profile of Max the Mini Aussie-Corgi mix"
+      aria-label="Wildlife Spotlight: American Bison"
       className=" mx-auto bg-[rgb(var(--card))] border border-[rgb(var(--border))] rounded-2xl shadow-xl overflow-hidden transition-transform hover:scale-[1.01] focus-within:ring-2 focus-within:ring-[rgb(var(--cta))]"
     >
       <img
-        src="https://www.rover.com/blog/wp-content/uploads/2014/07/corgi-dog-smiling.jpg"
-        alt="Max, a smiling Mini Aussie-Corgi mix"
+        src="https://images.unsplash.com/photo-1624370945184-8bf927b64e8e?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGJpc29ufGVufDB8fDB8fHww"
+        alt="An American Bison standing in grassland"
         className="w-full h-48 object-cover object-center"
       />
 
       <div className="p-5 space-y-3">
-        {/* Name & Basic Info */}
+        {/* Name & Classification */}
         <div>
           <h2 className="text-xl font-bold text-[rgb(var(--copy-primary))]">
-            Max
+            American Bison
           </h2>
           <p className="text-sm text-[rgb(var(--copy-secondary))]">
-            Mini Aussie/Corgi · 6 yrs · Seattle, WA
+            Species: <em>Bison bison</em> · Mammal · Commonly found in:
+            Yellowstone, Badlands, and Wind Cave National Parks
           </p>
         </div>
 
         {/* Short Bio */}
         <p className="text-sm text-[rgb(var(--copy-secondary))]">
-          Friendly, playful, and always down for a game of fetch.
+          The largest land mammal in North America, bison are iconic symbols of
+          the American wilderness — known for their size, strength, and grazing
+          herds.
         </p>
 
         {/* Enhanced Tags */}
         <ul className="flex flex-wrap gap-2">
-          {["High energy", "House-trained", "Good with kids", "Vaccinated"].map(
-            (tag) => (
+          {["Grazing", "Herd animal", "Protected", "Roams open plains"].map(
+            (trait) => (
               <li
-                key={tag}
+                key={trait}
                 className="text-xs font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full bg-[rgb(var(--cta))]/10 text-[rgb(var(--cta))]"
               >
-                {tag}
+                {trait}
               </li>
             )
           )}
@@ -46,7 +49,7 @@ const MaxProfile = () => {
             type="button"
             className="w-full inline-flex items-center justify-center px-4 py-2 rounded-lg bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))] font-medium text-sm transition duration-150 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--cta))] focus:ring-offset-2"
           >
-            View Profile
+            Learn More
           </button>
         </div>
       </div>
@@ -54,4 +57,4 @@ const MaxProfile = () => {
   );
 };
 
-export default MaxProfile;
+export default WildlifeSpotlight;
