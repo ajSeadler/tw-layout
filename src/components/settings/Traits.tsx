@@ -1,4 +1,3 @@
-import React from "react";
 import { Sparkles, PawPrint, Smile, Heart, Brain } from "lucide-react";
 
 const traits = [
