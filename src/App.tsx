@@ -6,6 +6,7 @@ import PlanPage from "./pages/PlanPage";
 import ParksPage from "./pages/ParksPage";
 import AboutPage from "./pages/AboutPage";
 import TripSummary from "./components/parks/trips/TripSummary";
+import Settings from "./pages/Settings";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/planner" element={<PlanPage />} />
           <Route path="/summary" element={<TripSummary />} />
           <Route path="/parks" element={<ParksPage />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </DefaultLayout>
     </BrowserRouter>

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ParkImageCarousel } from "../parks/ParkImagesCarousel";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import EntranceFeesSection from "../parks/EntranceFeeSection";
+import BackButton from "../test/BackButton";
 
 type Park = {
   id: string;
@@ -77,12 +78,7 @@ const ParkDetail: React.FC = () => {
       <div className="max-w-5xl mx-auto px-6 py-10">
         <div className="mb-8 flex items-start justify-between">
           <h1 className="text-4xl font-bold tracking-tight">{park.fullName}</h1>
-          <Link
-            to="/"
-            className="text-sm px-4 py-2 rounded-xl bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))] font-semibold shadow-sm"
-          >
-            <ArrowLeft />
-          </Link>
+          <BackButton />
         </div>
         <section>
           <h2 className="text-2xl font-semibold mb-2">Overview</h2>

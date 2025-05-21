@@ -16,7 +16,7 @@
 }
 
 .dark {
-  --background: 10, 10, 10;
+  --background: 17, 17, 17;
   --border: 38, 38, 38;
   --card: 23, 23, 23;
   --copy-primary: 250, 250, 250;
@@ -92,6 +92,109 @@
   --cta-text: 0, 10, 15;
   /* Dark slate background for legibility */
 
+  background: rgba(var(--background));
+}
+
+/* after your existing .quantum */
+
+.sunset {
+  --background: 255, 94, 77;
+  /* Warm coral */
+  --border: 255, 150, 120;
+  /* Soft peach outline */
+  --card: 255, 255, 240;
+  /* Light cream surface */
+  --copy-primary: 50, 20, 15;
+  /* Deep burnt umber */
+  --copy-secondary: 120, 80, 70;
+  /* Muted terracotta */
+  --cta: 255, 165, 0;
+  /* Vibrant orange */
+  --cta-active: 230, 140, 0;
+  /* Darker orange on hover */
+  --cta-text: 255, 255, 255;
+  /* White text */
+  background: rgba(var(--background));
+}
+
+.forest {
+  --background: 36, 46, 36;
+  /* Deep forest green */
+  --border: 52, 66, 52;
+  /* Shadowed pine */
+  --card: 58, 75, 58;
+  /* Soft moss */
+  --copy-primary: 224, 234, 224;
+  /* Light fern for body text */
+  --copy-secondary: 160, 180, 160;
+  /* Subtle sage */
+  --cta: 102, 181, 95;
+  /* Gentle fern green */
+  --cta-active: 85, 150, 80;
+  /* Hover shade */
+  --cta-text: 255, 255, 255;
+  /* White for contrast */
+  background: rgba(var(--background));
+}
+
+
+.ocean {
+  --background: 220, 240, 250;
+  /* Light seafoam background for better contrast */
+  --border: 0, 105, 148;
+  /* Original deep ocean for accents */
+  --card: 255, 255, 255;
+  /* White card for clarity */
+  --copy-primary: 0, 60, 80;
+  /* Darker navy for strong text contrast */
+  --copy-secondary: 40, 90, 110;
+  /* Medium slate blue */
+  --cta: 0, 150, 199;
+  /* Bright ocean blue */
+  --cta-active: 0, 130, 170;
+  /* Slightly deeper on hover */
+  --cta-text: 255, 255, 255;
+  /* White for buttons */
+  background: rgba(var(--background));
+}
+
+.desert {
+  --background: 237, 201, 175;
+  /* Sandy tan */
+  --border: 210, 180, 140;
+  /* Warm dune outline */
+  --card: 250, 240, 220;
+  /* Light sand surface */
+  --copy-primary: 60, 30, 10;
+  /* Dark sienna text */
+  --copy-secondary: 120, 90, 60;
+  /* Soft clay */
+  --cta: 204, 102, 0;
+  /* Rustic orange */
+  --cta-active: 180, 80, 0;
+  /* Hover shade */
+  --cta-text: 255, 255, 255;
+  /* White */
+  background: rgba(var(--background));
+}
+
+.midnight {
+  --background: 25, 25, 112;
+  /* Midnight blue */
+  --border: 18, 18, 90;
+  /* Deep navy outline */
+  --card: 40, 40, 120;
+  /* Twilight surface */
+  --copy-primary: 230, 230, 250;
+  /* Lavender-white text */
+  --copy-secondary: 170, 170, 200;
+  /* Soft periwinkle */
+  --cta: 173, 216, 230;
+  /* Light sky blue */
+  --cta-active: 150, 190, 210;
+  /* Hover shade */
+  --cta-text: 0, 0, 50;
+  /* Very dark navy */
   background: rgba(var(--background));
 }
 

@@ -57,7 +57,7 @@ const TripMetaSummary: React.FC<Props> = ({
   }
 
   return (
-    <div className="bg-[rgb(var(--card))] border border-[rgb(var(--border))] rounded-2xl shadow-md p-6">
+    <div className="bg-[rgb(var(--card))] border border-[rgb(var(--border))] rounded-2xl shadow-md p-6 w-full max-w-full">
       <div className="flex flex-wrap items-center gap-4">
         {items.map(({ icon: Icon, label }, idx) => (
           <div

@@ -353,7 +353,7 @@ const TripSummary: React.FC = () => {
           </div>
         ) : (
           <>
-            <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
               {/* Summary cards */}
               <TripMetaSummary
                 startDate={state.startDate}

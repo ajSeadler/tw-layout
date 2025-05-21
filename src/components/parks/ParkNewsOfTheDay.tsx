@@ -88,6 +88,7 @@ const ParkNewsOfTheDay: React.FC = () => {
   if (!article) {
     return null;
   }
+  const cleanText = article.listingDescription.normalize("NFKD");
 
   return (
     <section className="relative w-full overflow-hidden cursor-default transition hover:shadow-xl">
@@ -109,7 +110,9 @@ const ParkNewsOfTheDay: React.FC = () => {
           {article.title}
         </p>
         <p className="max-w-2xl text-gray-200 drop-shadow-sm mb-6">
-          {article.listingDescription.slice(0, 240)}...
+          <p className="max-w-2xl text-gray-200 drop-shadow-sm mb-6">
+            {cleanText.slice(0, 240)}...
+          </p>
         </p>
         <a
           href={article.url}

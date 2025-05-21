@@ -8,9 +8,30 @@ import {
   type ReactNode,
 } from "react";
 
-export type ThemeMode = "light" | "dark" | "red" | "darktech" | "quantum";
+export type ThemeMode =
+  | "light"
+  | "dark"
+  | "red"
+  | "darktech"
+  | "quantum"
+  | "sunset"
+  | "forest"
+  | "ocean"
+  | "desert"
+  | "midnight";
 
-const THEMES: ThemeMode[] = ["light", "dark", "red", "darktech", "quantum"];
+const THEMES: ThemeMode[] = [
+  "light",
+  "dark",
+  "red",
+  "darktech",
+  "quantum",
+  "sunset",
+  "forest",
+  "ocean",
+  "desert",
+  "midnight",
+];
 
 type ThemeContextType = {
   theme: ThemeMode;
