@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-irregular-whitespace */
 import React from "react";
 import {
@@ -77,7 +76,6 @@ const WeatherInfographic: React.FC<Props> = ({ weather }) => {
   // SVG gauge parameters
   const radius = 48;
   const circumference = 2 * Math.PI * radius;
-  const range = weather.maxTemp - weather.minTemp;
   // for simplicity we map minTemp→0%, maxTemp→100% (you could map to real-world scale)
   const fillPct = 100; // full arc is always shown
   const dashArray = `${(fillPct / 100) * circumference} ${circumference}`;
