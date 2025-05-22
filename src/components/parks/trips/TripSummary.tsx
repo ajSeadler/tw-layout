@@ -11,6 +11,7 @@ import { fetchWeather } from "../../../utils/fetchWeather"; // adjust the path a
 import TripMetaSummary from "./TripMetaSummary";
 import ParkCardDetails from "./ParkCardDetails";
 import PackingSuggestions from "./PackingSuggestions";
+import LoadingSpinner from "../../LoadingSpinner";
 import { Loader, MapPin, Navigation2 } from "lucide-react";
 
 const OPENWEATHER_KEY = import.meta.env.VITE_OPENWEATHER_KEY as string;
@@ -58,7 +59,6 @@ type TripSummaryState = {
   estimatedBudget: number;
 };
 
-// compute great‐circle distance in miles
 function haversineDistance(
   lat1: number,
   lon1: number,
@@ -66,7 +66,7 @@ function haversineDistance(
   lon2: number
 ): number {
   const toRad = (deg: number) => (deg * Math.PI) / 180;
-  const R = 3958.8; // miles
+  const R = 3958.8;
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
   const a =
@@ -75,7 +75,6 @@ function haversineDistance(
   return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-// format minutes into “Xh Ym” or “Zm”
 function formatDuration(minutes: number): string {
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
@@ -94,12 +93,15 @@ const TripSummary: React.FC = () => {
   });
   const [manualCity, setManualCity] = useState("");
   const [loadingStart, setLoadingStart] = useState(false);
+  const [loading, setLoading] = useState(true); // ✅ Added loading state
   const navigate = useNavigate();
 
-  // 1) load saved itinerary
   useEffect(() => {
     const saved = localStorage.getItem("tripItinerary");
-    if (!saved) return;
+    if (!saved) {
+      setLoading(false);
+      return;
+    }
     const parsed = JSON.parse(saved) as Omit<
       ItineraryItem,
       "distanceToNext" | "weather" | "activities"
@@ -114,7 +116,6 @@ const TripSummary: React.FC = () => {
     }));
   }, []);
 
-  // 2) compute start/end dates & nights
   useEffect(() => {
     const { itinerary } = state;
     if (!itinerary.length) return;
@@ -128,15 +129,18 @@ const TripSummary: React.FC = () => {
     setState((s) => ({ ...s, startDate, endDate, totalNights }));
   }, [state.itinerary]);
 
-  // 3) fetch distances, weather, activities
   useEffect(() => {
     const fetchAll = async () => {
       const { itinerary } = state;
-      if (!itinerary.length) return;
+      if (!itinerary.length) {
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true); // ✅ Start loading
 
       const updated = await Promise.all(
         itinerary.map(async (item, i) => {
-          // distance & duration to next park
           let distanceToNext;
           if (i < itinerary.length - 1) {
             const next = itinerary[i + 1];
@@ -154,7 +158,6 @@ const TripSummary: React.FC = () => {
             };
           }
 
-          // current weather
           let weather;
           try {
             weather = await fetchWeather(item.latitude, item.longitude);
@@ -162,7 +165,6 @@ const TripSummary: React.FC = () => {
             console.error("Weather fetch error", e);
           }
 
-          // top 3 NPS activities
           let activities: ItineraryItem["activities"] = [];
           try {
             const aurl = new URL("https://developer.nps.gov/api/v1/activities");
@@ -188,7 +190,6 @@ const TripSummary: React.FC = () => {
         0
       );
 
-      // distance & duration from start location → first park
       let startToFirst: { miles: number; duration: string };
       if (state.startLocation && updated.length) {
         const miles = haversineDistance(
@@ -211,12 +212,13 @@ const TripSummary: React.FC = () => {
         totalDistance,
         startToFirst,
       }));
+
+      setLoading(false); // ✅ Done loading
     };
 
     fetchAll();
   }, [state.startDate, state.itinerary.length, state.startLocation]);
 
-  // 4) recompute budget
   useEffect(() => {
     const { budgetInputs, totalNights, totalDistance } = state;
     const { lodgingPerNight, parkFees, gasPerMile } = budgetInputs;
@@ -225,7 +227,6 @@ const TripSummary: React.FC = () => {
     setState((s) => ({ ...s, estimatedBudget }));
   }, [state.budgetInputs, state.totalNights, state.totalDistance]);
 
-  // get device location
   const getLocation = () => {
     setLoadingStart(true);
     navigator.geolocation.getCurrentPosition(
@@ -246,7 +247,6 @@ const TripSummary: React.FC = () => {
     );
   };
 
-  // geocode manual city
   const resolveCityToCoords = async () => {
     if (!manualCity) return;
     setLoadingStart(true);
@@ -271,6 +271,9 @@ const TripSummary: React.FC = () => {
       setLoadingStart(false);
     }
   };
+
+  // ✅ Early return if loading
+  if (loading) return <LoadingSpinner message="Loading your trip summary..." />;
 
   return (
     <div className="min-h-screen bg-[rgb(var(--background))] text-[rgb(var(--copy-primary))] py-12 px-4 sm:px-6 lg:px-8">
