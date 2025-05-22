@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ParkImageCarousel } from "../parks/ParkImagesCarousel";
-import { ExternalLink } from "lucide-react";
 import EntranceFeesSection from "../parks/EntranceFeeSection";
 import BackButton from "../test/BackButton";
 import { fetchWeather, type WeatherData } from "../../utils/fetchWeather";
 import WeatherCard from "./WeatherCard";
+import DirectionsCard from "./DirectionsCard";
+import LoadingSpinner from "../LoadingSpinner";
 
 type Park = {
   id: string;
@@ -72,11 +73,7 @@ const ParkDetail: React.FC = () => {
   }, [id]);
 
   if (loading) {
-    return (
-      <div className="p-8 text-center text-[rgb(var(--copy-secondary))]">
-        Loading park details...
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!park) {
@@ -112,53 +109,14 @@ const ParkDetail: React.FC = () => {
         )}
 
         <div className="space-y-10">
-          <section className="grid sm:grid-cols-2 gap-6 items-start">
-            {/* Details Card */}
-            <div className="bg-[rgb(var(--card))] border border-[rgb(var(--border))] p-6 rounded-2xl shadow-sm">
-              <h3 className="text-xl font-semibold mb-3">Details</h3>
-              <p>
-                <strong>Designation:</strong> {park.designation}
-              </p>
-              <p>
-                <strong>States:</strong> {park.states}
-              </p>
-              <div className="mt-4">
-                <iframe
-                  title="Park location"
-                  width="100%"
-                  height="250"
-                  className="rounded-lg border-0"
-                  src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBS9_PWMc0SPxL8Pl_EIAWk7vPxh6UDtZY&q=${park.latitude},${park.longitude}&zoom=12`}
-                  allowFullScreen
-                />
-              </div>
-              <p className="mt-5 flex items-center space-x-1">
-                <a
-                  href={park.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[rgb(var(--cta))] underline flex items-center"
-                >
-                  <span>Official Site</span>
-                  <ExternalLink size={16} className="ml-1" />
-                </a>
-              </p>
-            </div>
-
-            {/* Directions Card */}
-            <div className="bg-[rgb(var(--card))] border border-[rgb(var(--border))] p-6 rounded-2xl shadow-sm">
-              <h3 className="text-xl font-semibold mb-3">Directions</h3>
-              <p>{park.directionsInfo}</p>
-              {park.directionsUrl && (
-                <a
-                  href={park.directionsUrl}
-                  className="text-[rgb(var(--cta))] underline mt-2 inline-block"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View Map & Directions
-                </a>
-              )}
+          <section className="flex justify-center px-4">
+            <div className="w-full">
+              <DirectionsCard
+                directionsInfo={park.directionsInfo}
+                directionsUrl={park.directionsUrl}
+                latitude={park.latitude}
+                longitude={park.longitude}
+              />
             </div>
           </section>
 

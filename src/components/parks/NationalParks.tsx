@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RegionalParks from "./RegionalParks";
+import LoadingSpinner from "../LoadingSpinner";
 
 type Park = {
   id: string;
@@ -143,9 +144,7 @@ const NationalParks: React.FC = () => {
           </form>
 
           {loading ? (
-            <p className="text-[rgb(var(--copy-secondary))]">
-              Loading parks...
-            </p>
+            <LoadingSpinner />
           ) : (
             <>
               <h2 className="text-2xl font-semibold text-[rgb(var(--copy-primary))] mb-3">

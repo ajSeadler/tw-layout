@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
+import LoadingSpinner from "../LoadingSpinner";
 
 type Article = {
   id: string;
@@ -86,7 +87,11 @@ const ParkNewsOfTheDay: React.FC = () => {
   }
 
   if (!article) {
-    return null;
+    return (
+      <>
+        <LoadingSpinner />
+      </>
+    );
   }
   const cleanText = article.listingDescription.normalize("NFKD");
 

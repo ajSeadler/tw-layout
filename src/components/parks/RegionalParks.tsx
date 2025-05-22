@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "../LoadingSpinner";
 
 type Park = {
   id: string;
@@ -88,7 +89,7 @@ const RegionalParks: React.FC = () => {
 
         {/* Park Cards */}
         {loading ? (
-          <p className="text-[rgb(var(--copy-secondary))]">Loading parks...</p>
+          <LoadingSpinner />
         ) : (
           <>
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-6">
