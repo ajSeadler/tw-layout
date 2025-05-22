@@ -1,5 +1,5 @@
 import React from "react";
-import type { ItineraryItem } from "../trips/TripSummary";
+import type { ItineraryItem } from "../../../types/itinerary";
 import { CheckCircle } from "lucide-react";
 
 type Props = {

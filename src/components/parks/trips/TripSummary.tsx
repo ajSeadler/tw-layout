@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useRef } from "react";
@@ -15,7 +14,7 @@ import { Loader, MapPin, Navigation2 } from "lucide-react";
 const OPENWEATHER_KEY = import.meta.env.VITE_OPENWEATHER_KEY as string;
 const NPS_KEY = import.meta.env.VITE_NPS_KEY as string;
 
-type ItineraryItem = {
+export type ItineraryItem = {
   id: string;
   fullName: string;
   parkCode: string;
@@ -41,7 +40,7 @@ type ItineraryItem = {
   activities?: Array<{ name: string; type: string; duration: string }>;
 };
 
-type TripSummaryState = {
+export type TripSummaryState = {
   itinerary: ItineraryItem[];
   totalNights: number;
   startDate: Date | null;
