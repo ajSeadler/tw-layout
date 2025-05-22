@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* src/components/parks/trips/TripSummary.tsx */
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-import React, { useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { differenceInCalendarDays } from "date-fns";
-import { fetchWeather } from "../../../utils/fetchWeather"; // adjust the path as needed
+import { fetchWeather } from "../../../utils/fetchWeather";
 
 import TripMetaSummary from "./TripMetaSummary";
 import ParkCardDetails from "./ParkCardDetails";
@@ -17,7 +15,7 @@ import { Loader, MapPin, Navigation2 } from "lucide-react";
 const OPENWEATHER_KEY = import.meta.env.VITE_OPENWEATHER_KEY as string;
 const NPS_KEY = import.meta.env.VITE_NPS_KEY as string;
 
-export type ItineraryItem = {
+type ItineraryItem = {
   id: string;
   fullName: string;
   parkCode: string;
@@ -50,6 +48,7 @@ type TripSummaryState = {
   endDate: Date | null;
   totalDistance: number;
   startLocation?: { latitude: number; longitude: number };
+  startLocationName?: string;
   startToFirst?: { miles: number; duration: string };
   budgetInputs: {
     lodgingPerNight: number;
@@ -90,11 +89,38 @@ const TripSummary: React.FC = () => {
     totalDistance: 0,
     budgetInputs: { lodgingPerNight: 0, parkFees: 0, gasPerMile: 0 },
     estimatedBudget: 0,
+    startLocationName: "",
   });
   const [manualCity, setManualCity] = useState("");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
   const [loadingStart, setLoadingStart] = useState(false);
-  const [loading, setLoading] = useState(true); // ✅ Added loading state
+  const [loading, setLoading] = useState(true);
+  const timerRef = useRef<number | null>(null);
   const navigate = useNavigate();
+
+  // Simple debounced fetch for city autocomplete
+  const fetchCitySuggestions = async (query: string) => {
+    if (!query) {
+      setSuggestions([]);
+      return;
+    }
+    try {
+      const url = new URL("https://api.openweathermap.org/geo/1.0/direct");
+      url.searchParams.set("q", query);
+      url.searchParams.set("limit", "5");
+      url.searchParams.set("appid", OPENWEATHER_KEY);
+
+      const res = await fetch(url.toString());
+      const data = await res.json();
+      setSuggestions(
+        data.map((c: any) =>
+          [c.name, c.state, c.country].filter(Boolean).join(", ")
+        )
+      );
+    } catch {
+      setSuggestions([]);
+    }
+  };
 
   useEffect(() => {
     const saved = localStorage.getItem("tripItinerary");
@@ -137,7 +163,7 @@ const TripSummary: React.FC = () => {
         return;
       }
 
-      setLoading(true); // ✅ Start loading
+      setLoading(true);
 
       const updated = await Promise.all(
         itinerary.map(async (item, i) => {
@@ -213,7 +239,7 @@ const TripSummary: React.FC = () => {
         startToFirst,
       }));
 
-      setLoading(false); // ✅ Done loading
+      setLoading(false);
     };
 
     fetchAll();
@@ -237,6 +263,7 @@ const TripSummary: React.FC = () => {
             latitude: pos.coords.latitude,
             longitude: pos.coords.longitude,
           },
+          startLocationName: "Current Location",
         }));
         setLoadingStart(false);
       },
@@ -247,32 +274,6 @@ const TripSummary: React.FC = () => {
     );
   };
 
-  const resolveCityToCoords = async () => {
-    if (!manualCity) return;
-    setLoadingStart(true);
-    try {
-      const url = new URL("https://api.openweathermap.org/geo/1.0/direct");
-      url.searchParams.set("q", manualCity);
-      url.searchParams.set("limit", "1");
-      url.searchParams.set("appid", OPENWEATHER_KEY);
-
-      const res = await fetch(url.toString());
-      const data = await res.json();
-      if (!data.length) throw new Error("City not found");
-      const { lat, lon } = data[0];
-
-      setState((s) => ({
-        ...s,
-        startLocation: { latitude: lat, longitude: lon },
-      }));
-    } catch {
-      alert("Failed to find coordinates for city.");
-    } finally {
-      setLoadingStart(false);
-    }
-  };
-
-  // ✅ Early return if loading
   if (loading) return <LoadingSpinner message="Loading your trip summary..." />;
 
   return (
@@ -285,13 +286,13 @@ const TripSummary: React.FC = () => {
         </header>
 
         {/* Start‐location controls */}
-        <div className="w-full max-w-md mx-auto p-4 bg-[rgb(var(--card))] rounded-xl shadow-sm">
-          <div className="flex flex-col space-y-3">
+        <div className="w-full max-w-md mx-auto bg-[rgb(var(--card))] p-2 rounded-full shadow-sm">
+          <div className="flex items-center space-x-2">
             {/* — Current Location Button — */}
             <button
               onClick={getLocation}
               disabled={loadingStart}
-              className="flex items-center justify-center w-full px-4 py-2 rounded-lg bg-[rgb(var(--cta))] text-[rgb(var(--cta-text))] font-medium shadow transition-transform duration-200 ease-in-out hover:scale-102 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[rgb(var(--cta))]"
+              className="flex items-center justify-center p-2 rounded-full bg-[rgb(var(--cta))] text-[rgb(var(--cta-text))] font-medium shadow transition-transform duration-200 ease-in-out hover:scale-102 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[rgb(var(--cta))]"
               aria-label="Use Current Location"
             >
               {loadingStart ? (
@@ -299,36 +300,90 @@ const TripSummary: React.FC = () => {
               ) : (
                 <MapPin className="w-5 h-5" />
               )}
-              <span className="ml-2">Current Location</span>
             </button>
 
-            {/* — Manual City Input & Set Button — */}
-            <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
+            {/* — Manual City Input & dropdown — */}
+            <div className="relative flex-1">
               <input
                 type="text"
                 placeholder="Enter starting city"
                 value={manualCity}
-                onChange={(e) => setManualCity(e.target.value)}
-                className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--cta))] focus:border-transparent shadow-sm text-base"
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setManualCity(val);
+                  if (timerRef.current) clearTimeout(timerRef.current);
+                  timerRef.current = window.setTimeout(() => {
+                    fetchCitySuggestions(val);
+                  }, 300); // debounce delay
+                }}
+                className="w-full px-4 py-2 rounded-full border border-[rgb(var(--border))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--cta))] focus:border-transparent shadow-sm text-base"
                 aria-label="Starting City"
               />
-              <button
-                onClick={resolveCityToCoords}
-                className="flex items-center justify-center px-4 py-2 rounded-lg bg-[rgb(var(--cta))] text-[rgb(var(--cta-text))] font-medium shadow transition-transform duration-200 ease-in-out hover:scale-102 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--cta))]"
-                aria-label="Set Start City"
-              >
-                <Navigation2 className="w-5 h-5 mr-1" />
-                <span>Set Start</span>
-              </button>
+
+              {suggestions.length > 0 && (
+                <ul className="absolute top-full left-0 right-0 mt-1 bg-[rgb(var(--card))] border border-[rgb(var(--border))] rounded-lg shadow-lg max-h-48 overflow-auto z-20">
+                  {suggestions.map((s) => (
+                    <li
+                      key={s}
+                      onClick={() => {
+                        setManualCity(s);
+                        setSuggestions([]);
+                      }}
+                      className="px-4 py-2 cursor-pointer text-[rgb(var(--copy-primary))] hover:bg-[rgb(var(--cta))] hover:text-[rgb(var(--cta-text))] transition-colors duration-150"
+                    >
+                      {s}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
+
+            {/* — Set Start Button — */}
+            <button
+              onClick={async () => {
+                if (!manualCity) return;
+                setLoadingStart(true);
+                try {
+                  const url = new URL(
+                    "https://api.openweathermap.org/geo/1.0/direct"
+                  );
+                  url.searchParams.set("q", manualCity);
+                  url.searchParams.set("limit", "1");
+                  url.searchParams.set("appid", OPENWEATHER_KEY);
+
+                  const res = await fetch(url.toString());
+                  const data = await res.json();
+                  if (!data.length) throw new Error("City not found");
+                  const { lat, lon } = data[0];
+
+                  setState((s) => ({
+                    ...s,
+                    startLocation: { latitude: lat, longitude: lon },
+                    startLocationName: manualCity,
+                  }));
+                } catch {
+                  alert("Failed to find coordinates for city.");
+                } finally {
+                  setLoadingStart(false);
+                }
+              }}
+              className="flex items-center justify-center p-2 rounded-full bg-[rgb(var(--cta))] text-[rgb(var(--cta-text))] font-medium shadow transition-transform duration-200 ease-in-out hover:scale-102 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--cta))]"
+              aria-label="Set Start City"
+            >
+              <Navigation2 className="w-5 h-5 mr-1" />
+              <span>Set Start</span>
+            </button>
           </div>
         </div>
 
         {/* Distance to first park */}
         {state.startToFirst && (
           <p className="text-center text-sm text-[rgb(var(--copy-secondary))]">
-            Distance from your starting location to first park:{" "}
-            <strong>{state.startToFirst.miles} miles</strong> (
+            Distance from{" "}
+            <strong>
+              {state.startLocationName || "your starting location"}
+            </strong>{" "}
+            to first park: <strong>{state.startToFirst.miles} miles</strong> (
             {state.startToFirst.duration})
           </p>
         )}
@@ -348,8 +403,7 @@ const TripSummary: React.FC = () => {
           </div>
         ) : (
           <>
-            <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-              {/* Summary cards */}
+            <section className="">
               <TripMetaSummary
                 startDate={state.startDate}
                 endDate={state.endDate}
@@ -358,10 +412,8 @@ const TripSummary: React.FC = () => {
                 totalDistance={state.totalDistance}
                 startToFirst={state.startToFirst}
               />
-              <PackingSuggestions itinerary={state.itinerary} />
             </section>
 
-            {/* Park details */}
             <section className="grid gap-8">
               {state.itinerary.map((item, idx) => (
                 <ParkCardDetails
@@ -372,8 +424,8 @@ const TripSummary: React.FC = () => {
               ))}
             </section>
 
-            {/* Edit button */}
             <div className="text-center">
+              <PackingSuggestions itinerary={state.itinerary} />
               <button
                 onClick={() => navigate("/planner")}
                 className="inline-block mt-4 px-6 py-3 bg-transparent border-2 border-[rgb(var(--cta))] hover:bg-[rgb(var(--cta))] hover:text-[rgb(var(--cta-text))] text-[rgb(var(--cta))] font-medium rounded-full transition"

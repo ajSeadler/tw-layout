@@ -48,7 +48,6 @@ const TripMetaSummary: React.FC<Props> = ({
     },
   ];
 
-  // Conditionally add the first‑leg drive pill at the end
   if (startToFirst) {
     items.push({
       icon: MapPin,
@@ -57,12 +56,12 @@ const TripMetaSummary: React.FC<Props> = ({
   }
 
   return (
-    <div className="bg-[rgb(var(--card))] border border-[rgb(var(--border))] rounded-2xl shadow-md p-6 w-full max-w-full">
-      <div className="flex flex-wrap items-center gap-4">
+    <div className="bg-[rgb(var(--card))] border border-[rgb(var(--border))] rounded-full shadow-md py-3 px-2 w-full">
+      <div className="flex flex-row flex-nowrap items-center justify-start gap-4 overflow-x-auto no-scrollbar">
         {items.map(({ icon: Icon, label }, idx) => (
           <div
             key={idx}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-[rgba(var(--cta),0.08)]"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-[rgba(var(--cta),0.2)] flex-shrink-0"
           >
             <Icon className="w-5 h-5 text-[rgb(var(--cta))]" />
             <span className="text-[rgb(var(--copy-primary))] font-medium">
