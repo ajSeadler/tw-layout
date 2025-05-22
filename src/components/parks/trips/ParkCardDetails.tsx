@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import type { ItineraryItem } from "../trips/TripSummary";
+import WeatherPanel from "./WeatherPanel";
 
 type Props = {
   item: ItineraryItem;
@@ -83,32 +84,8 @@ const ParkCardDetails: React.FC<Props> = ({ item, nextItem }) => {
         </div>
 
         {/* 3. Weather Panel */}
-        <div
-          className="
-            bg-[rgb(var(--background))]
-            border border-[rgb(var(--border))]
-            rounded-2xl
-            p-4
-            flex flex-col items-center
-            text-center
-            text-sm
-          "
-        >
-          {item.weather ? (
-            <>
-              <img
-                src={item.weather.icon}
-                alt={item.weather.description}
-                className="w-12 h-12 mb-2"
-              />
-              <p className="font-medium">{item.weather.description}</p>
-              <p className="text-[rgb(var(--copy-secondary))]">
-                {item.weather.minTemp}°{item.weather.maxTemp}°
-              </p>
-            </>
-          ) : (
-            <p className="text-[rgb(var(--copy-secondary))]">Weather N/A</p>
-          )}
+        <div className="flex justify-center items-start">
+          <WeatherPanel weather={item.weather} />
         </div>
       </div>
     </div>

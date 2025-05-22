@@ -7,11 +7,13 @@ import ParksPage from "./pages/ParksPage";
 import AboutPage from "./pages/AboutPage";
 import TripSummary from "./components/parks/trips/TripSummary";
 import Settings from "./pages/Settings";
+import ScrollToTop from "./components/ScrollToTop";
 
 export default function App() {
   return (
     <BrowserRouter>
       <DefaultLayout>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />

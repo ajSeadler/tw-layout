@@ -12,6 +12,7 @@ const Navbar: React.FC = () => {
     { name: "Parks", path: "/parks" },
     { name: "Plan Visit", path: "/planner" },
     { name: "About", path: "/about" },
+    { name: "My Trip", path: "/summary" },
   ];
 
   return (

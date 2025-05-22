@@ -6,6 +6,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { differenceInCalendarDays } from "date-fns";
+import { fetchWeather } from "../../../utils/fetchWeather"; // adjust the path as needed
 
 import TripMetaSummary from "./TripMetaSummary";
 import ParkCardDetails from "./ParkCardDetails";
@@ -30,7 +31,13 @@ export type ItineraryItem = {
     minTemp: number;
     maxTemp: number;
     description: string;
-  };
+    feelsLike: number;
+    humidity: number;
+    windSpeed: number;
+    windDeg: number;
+    pressure: number;
+  } | null;
+
   distanceToNext?: { miles: number; duration: string };
   activities?: Array<{ name: string; type: string; duration: string }>;
 };
@@ -150,22 +157,7 @@ const TripSummary: React.FC = () => {
           // current weather
           let weather;
           try {
-            const url = new URL(
-              "https://api.openweathermap.org/data/2.5/weather"
-            );
-            url.searchParams.set("lat", item.latitude.toString());
-            url.searchParams.set("lon", item.longitude.toString());
-            url.searchParams.set("appid", OPENWEATHER_KEY);
-            url.searchParams.set("units", "imperial");
-            const res = await fetch(url.toString());
-            if (!res.ok) throw new Error(`Weather ${res.status}`);
-            const j = await res.json();
-            weather = {
-              icon: `https://openweathermap.org/img/wn/${j.weather[0].icon}@2x.png`,
-              minTemp: Math.round(j.main.temp_min),
-              maxTemp: Math.round(j.main.temp_max),
-              description: j.weather[0].description,
-            };
+            weather = await fetchWeather(item.latitude, item.longitude);
           } catch (e) {
             console.error("Weather fetch error", e);
           }

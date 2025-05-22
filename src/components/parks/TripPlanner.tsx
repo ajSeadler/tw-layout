@@ -250,10 +250,10 @@ const TripPlanner: React.FC = () => {
                   </div>
                 ))}
 
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-wrap gap-4 justify-center">
                   <button
                     onClick={saveItinerary}
-                    className="px-6 py-3 rounded-xl bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))] font-semibold transition-colors duration-200"
+                    className="px-4 py-2 rounded-2xl bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))] text-lg font-semibold transition-colors"
                   >
                     Save Itinerary
                   </button>
@@ -272,7 +272,7 @@ const TripPlanner: React.FC = () => {
           <section className="text-center pt-12">
             <button
               onClick={() => navigate("/summary")}
-              className="inline-block px-8 py-4 rounded-2xl bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))] text-xl font-bold"
+              className="px-6 py-3 rounded-2xl bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))] text-lg font-semibold transition-colors"
             >
               View Trip Summary & Directions
             </button>

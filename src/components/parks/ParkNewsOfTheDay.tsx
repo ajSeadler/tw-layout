@@ -109,11 +109,11 @@ const ParkNewsOfTheDay: React.FC = () => {
         <p className="max-w-3xl text-lg sm:text-xl font-semibold text-[rgb(var(--cta))] drop-shadow-md mb-2">
           {article.title}
         </p>
+
         <p className="max-w-2xl text-gray-200 drop-shadow-sm mb-6">
-          <p className="max-w-2xl text-gray-200 drop-shadow-sm mb-6">
-            {cleanText.slice(0, 240)}...
-          </p>
+          {cleanText.slice(0, 240)}...
         </p>
+
         <a
           href={article.url}
           target="_blank"
