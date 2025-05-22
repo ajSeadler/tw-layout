@@ -372,8 +372,6 @@ const TripSummary: React.FC = () => {
               ))}
             </section>
 
-            {/* Packing & budget */}
-
             {/* Edit button */}
             <div className="text-center">
               <button

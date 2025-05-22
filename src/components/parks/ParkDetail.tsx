@@ -7,6 +7,7 @@ import { fetchWeather, type WeatherData } from "../../utils/fetchWeather";
 import WeatherCard from "./WeatherCard";
 import DirectionsCard from "./DirectionsCard";
 import LoadingSpinner from "../LoadingSpinner";
+import { MapPin } from "lucide-react";
 
 type Park = {
   id: string;
@@ -99,6 +100,9 @@ const ParkDetail: React.FC = () => {
 
         <section>
           <h2 className="text-2xl font-semibold mb-2">Overview</h2>
+          <p className="flex flex-row items-center gap-2">
+            <MapPin className="text-[rgb(var(--cta))]" /> {park.states}
+          </p>
           <p className="text-lg leading-relaxed text-[rgb(var(--copy-secondary))] mb-10">
             {park.description}
           </p>
@@ -109,7 +113,7 @@ const ParkDetail: React.FC = () => {
         )}
 
         <div className="space-y-10">
-          <section className="flex justify-center px-4">
+          <section className="flex justify-center">
             <div className="w-full">
               <DirectionsCard
                 directionsInfo={park.directionsInfo}
