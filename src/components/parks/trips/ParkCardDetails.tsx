@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import type { ItineraryItem } from "../trips/TripSummary";
-import WeatherPanel from "./WeatherPanel";
+import WeatherStrip from "./WeatherStrip";
 
 type Props = {
   item: ItineraryItem;
@@ -18,7 +18,7 @@ const ParkCardDetails: React.FC<Props> = ({ item, nextItem }) => {
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
+        if (["Enter", " "].includes(e.key)) {
           navigate(`/park/${item.id}`);
         }
       }}
@@ -27,17 +27,18 @@ const ParkCardDetails: React.FC<Props> = ({ item, nextItem }) => {
         bg-[rgb(var(--card))]
         border border-[rgb(var(--border))]
         rounded-3xl
-        p-6
+        p-6 pb-0
         shadow-sm
-        transition
-        hover:shadow-lg hover:-translate-y-1
+        transition hover:shadow-lg hover:-translate-y-1
         duration-200
         cursor-pointer
         focus:outline-none
+        overflow-hidden
       "
     >
-      <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr_150px] gap-6">
-        {/* 1. Park Image */}
+      {/* Main content grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-6 pb-6">
+        {/* Park Image */}
         {item.images[0] && (
           <div className="overflow-hidden rounded-xl w-full h-32 lg:h-full">
             <img
@@ -48,7 +49,7 @@ const ParkCardDetails: React.FC<Props> = ({ item, nextItem }) => {
           </div>
         )}
 
-        {/* 2. Main Info */}
+        {/* Info */}
         <div className="space-y-4">
           <h2 className="text-2xl font-bold leading-snug">{item.fullName}</h2>
           <p className="text-sm text-[rgb(var(--copy-secondary))] leading-relaxed">
@@ -76,18 +77,17 @@ const ParkCardDetails: React.FC<Props> = ({ item, nextItem }) => {
                   Drive → {nextItem.fullName.split(" ").slice(0, 2).join(" ")}
                 </p>
                 <p className="text-[rgb(var(--copy-secondary))]">
-                  {item.distanceToNext.miles}mi • {item.distanceToNext.duration}
+                  {item.distanceToNext.miles} mi •{" "}
+                  {item.distanceToNext.duration}
                 </p>
               </div>
             )}
           </div>
         </div>
-
-        {/* 3. Weather Panel */}
-        <div className="flex justify-center items-start">
-          <WeatherPanel weather={item.weather} />
-        </div>
       </div>
+
+      {/* Weather strip at bottom */}
+      <WeatherStrip weather={item.weather} />
     </div>
   );
 };

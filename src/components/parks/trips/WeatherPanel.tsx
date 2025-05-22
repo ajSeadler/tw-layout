@@ -1,9 +1,19 @@
+/* eslint-disable no-irregular-whitespace */
 import React from "react";
-import { Thermometer, Droplet, Wind, Gauge } from "lucide-react";
+import {
+  WiDaySunny,
+  WiCloud,
+  WiCloudy,
+  WiRain,
+  WiSnow,
+  WiDayFog,
+  WiThunderstorm,
+  WiStrongWind,
+  WiHumidity,
+} from "react-icons/wi";
 
 type Weather =
   | {
-      icon: string;
       minTemp: number;
       maxTemp: number;
       description: string;
@@ -11,7 +21,6 @@ type Weather =
       humidity: number;
       windSpeed: number;
       windDeg: number;
-      pressure: number;
     }
   | null
   | undefined;
@@ -21,7 +30,6 @@ type Props = {
 };
 
 function degToCompass(num: number) {
-  const val = Math.floor(num / 22.5 + 0.5);
   const arr = [
     "N",
     "NNE",
@@ -40,7 +48,21 @@ function degToCompass(num: number) {
     "NW",
     "NNW",
   ];
-  return arr[val % 16];
+  return arr[Math.floor(num / 22.5 + 0.5) % 16];
+}
+
+// choose the main icon component based on description keywords
+function WeatherIcon({ desc }: { desc: string }) {
+  const d = desc.toLowerCase();
+  if (d.includes("thunder")) return <WiThunderstorm />;
+  if (d.includes("drizzle") || d.includes("rain")) return <WiRain />;
+  if (d.includes("snow")) return <WiSnow />;
+  if (d.includes("fog") || d.includes("mist") || d.includes("haze"))
+    return <WiDayFog />;
+  if (d.includes("cloudy")) return <WiCloudy />;
+  if (d.includes("cloud")) return <WiCloud />;
+  if (d.includes("clear") || d.includes("sunny")) return <WiDaySunny />;
+  return <WiCloud />;
 }
 
 const WeatherPanel: React.FC<Props> = ({ weather }) => {
@@ -48,22 +70,23 @@ const WeatherPanel: React.FC<Props> = ({ weather }) => {
     return (
       <div
         className="
+          w-full max-w-[300px]
+          p-4
           bg-[rgb(var(--background))]
           border border-[rgb(var(--border))]
-          rounded-xl
-          p-3
-          flex flex-col items-center
-          text-center
-          text-xs
-          text-[rgb(var(--copy-secondary))]
-          w-full max-w-[140px]
-          select-none
+          rounded-3xl
           shadow-sm
+          flex items-center justify-center
+          text-[rgb(var(--copy-secondary))]
+          text-xs
+          select-none
+          transition-colors
+          hover:bg-[rgb(var(--background-alt))]
         "
         role="region"
         aria-label="Weather data not available"
       >
-        Weather N/A
+        <span className="font-medium">No weather data</span>
       </div>
     );
   }
@@ -71,69 +94,106 @@ const WeatherPanel: React.FC<Props> = ({ weather }) => {
   return (
     <div
       className="
+        w-full max-w-[300px]
+        p-5
         bg-[rgb(var(--background))]
         border border-[rgb(var(--border))]
-        rounded-xl
-        p-4
+        rounded-3xl
+        shadow-sm
         flex flex-col items-center
-        text-center
-        text-xs
-        w-full max-w-[140px]
         select-none
-        shadow-md
+        transition-all
+        hover:shadow-md hover:bg-[rgb(var(--background-alt))]
       "
-      aria-label="Current Weather"
       role="region"
+      aria-label={`Current weather: ${weather.description}, high ${weather.maxTemp}°, low ${weather.minTemp}°`}
     >
-      <img
-        src={weather.icon}
-        alt={weather.description}
-        className="w-12 h-12 mb-2 sm:w-14 sm:h-14"
-        draggable={false}
-        loading="lazy"
-      />
+      {/* Main Weather Icon */}
+      <div
+        className="
+          bg-[rgb(var(--background-alt))]
+          rounded-full
+          p-4
+          mb-3
+          text-[rgb(var(--primary))]
+          text-4xl
+        "
+        aria-hidden="true"
+      >
+        <WeatherIcon desc={weather.description} />
+      </div>
+
+      {/* Description & Temperatures */}
       <p
-        className="font-semibold leading-snug capitalize text-[rgb(var(--copy-primary))] truncate max-w-[110px]"
+        className="
+          text-[rgb(var(--copy-primary))]
+          text-sm
+          font-semibold
+          capitalize
+          mb-1
+          truncate
+          max-w-full
+        "
         title={weather.description}
       >
         {weather.description}
       </p>
-      <p className="text-[rgb(var(--copy-secondary))] font-medium leading-snug mb-3">
-        {weather.minTemp}° – {weather.maxTemp}°
-      </p>
+      <div className="flex items-baseline gap-2 mb-4">
+        <span className="text-[rgb(var(--copy-secondary))] text-xs">High</span>
+        <span className="text-[rgb(var(--copy-primary))] font-medium text-sm">
+          {weather.maxTemp}°
+        </span>
+      </div>
 
-      <div className="w-full grid grid-cols-2 gap-2 text-[rgb(var(--copy-secondary))]">
+      {/* Detailed Metrics */}
+      <div className="w-full grid grid-cols-3 gap-3 text-[rgb(var(--copy-secondary))]">
+        {/* Feels Like */}
         <div
-          className="flex items-center space-x-1 justify-start bg-[rgb(var(--background-alt))] rounded-md px-2 py-1 shadow-inner"
-          aria-label={`Feels like temperature ${weather.feelsLike} degrees Fahrenheit`}
+          className="
+            flex flex-col items-center
+            bg-[rgb(var(--background-alt))]
+            rounded-lg
+            px-2 py-2
+          "
+          aria-label={`Feels like ${weather.feelsLike} degrees Fahrenheit`}
         >
-          <Thermometer className="w-5 h-5 text-[rgb(var(--primary))]" />
-          <span className="font-semibold">{weather.feelsLike}°F</span>
+          <WiDaySunny className="w-5 h-5 text-[rgb(var(--primary))] mb-1" />
+          <span className="font-medium text-xs">{weather.feelsLike}°F</span>
+          <span className="text-[8px] uppercase mt-0.5">Feels Like</span>
         </div>
+
+        {/* Humidity */}
         <div
-          className="flex items-center space-x-1 justify-start bg-[rgb(var(--background-alt))] rounded-md px-2 py-1 shadow-inner"
-          aria-label={`Humidity level ${weather.humidity} percent`}
+          className="
+            flex flex-col items-center
+            bg-[rgb(var(--background-alt))]
+            rounded-lg
+            px-2 py-2
+          "
+          aria-label={`Humidity ${weather.humidity} percent`}
         >
-          <Droplet className="w-5 h-5 text-[rgb(var(--primary))]" />
-          <span className="font-semibold">{weather.humidity}%</span>
+          <WiHumidity className="w-5 h-5 text-[rgb(var(--primary))] mb-1" />
+          <span className="font-medium text-xs">{weather.humidity}%</span>
+          <span className="text-[8px] uppercase mt-0.5">Humidity</span>
         </div>
+
+        {/* Wind */}
         <div
-          className="flex items-center space-x-1 justify-start col-span-2 bg-[rgb(var(--background-alt))] rounded-md px-2 py-1 shadow-inner"
+          className="
+            flex flex-col items-center
+            bg-[rgb(var(--background-alt))]
+            rounded-lg
+            px-2 py-2
+          "
           aria-label={`Wind speed ${
             weather.windSpeed
           } miles per hour from ${degToCompass(weather.windDeg)}`}
         >
-          <Wind className="w-5 h-5 text-[rgb(var(--primary))]" />
-          <span className="font-semibold">
-            {weather.windSpeed} mph {degToCompass(weather.windDeg)}
+          <WiStrongWind className="w-5 h-5 text-[rgb(var(--primary))] mb-1" />
+          <span className="font-medium text-xs">{weather.windSpeed} mph</span>
+          <span className="text-[8px] uppercase mt-0.5">
+            {degToCompass(weather.windDeg)}
           </span>
-        </div>
-        <div
-          className="flex items-center space-x-1 justify-start col-span-2 bg-[rgb(var(--background-alt))] rounded-md px-2 py-1 shadow-inner"
-          aria-label={`Atmospheric pressure ${weather.pressure} hectopascals`}
-        >
-          <Gauge className="w-5 h-5 text-[rgb(var(--primary))]" />
-          <span className="font-semibold">{weather.pressure} hPa</span>
         </div>
       </div>
     </div>
