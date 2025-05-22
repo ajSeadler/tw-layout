@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ArrowLeft, ArrowRight, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// same wrapIndex & variants as before
+// Utility
 const wrapIndex = (min: number, max: number, v: number) => {
   const range = max - min;
   return ((((v - min) % range) + range) % range) + min;
@@ -29,19 +29,21 @@ export function ParkImageCarousel({
 
   return (
     <>
-      <div className="mb-10 w-full max-w-7xl mx-auto">
-        {/* arrows + image in a flex row */}
-        <div className="flex items-center justify-between">
+      <div className="mb-10 w-full max-w-7xl mx-auto px-4">
+        <div className="flex items-center justify-between gap-2 md:gap-6">
           <button
             aria-label="Previous"
             onClick={() => paginate(-1)}
-            className="p-2 rounded-full shadow-md bg-[rgb(var(--card))] hover:bg-[rgb(var(--card-secondary))]"
+            className="p-2 md:p-3 rounded-full shadow-md bg-[rgb(var(--card))] hover:bg-[rgb(var(--card-secondary))] transition-colors"
           >
-            <ArrowLeft size={24} className="text-[rgb(var(--copy))]" />
+            <ArrowLeft
+              size={20}
+              className="text-[rgb(var(--copy))] md:size-6"
+            />
           </button>
 
           <div
-            className="relative overflow-hidden rounded-2xl shadow-sm h-64 w-full mx-4 bg-[rgb(var(--card))] cursor-pointer"
+            className="relative overflow-hidden rounded-2xl shadow-sm h-64 sm:h-80 md:h-[28rem] w-full cursor-pointer bg-[rgb(var(--card))]"
             onClick={() => setModalOpen(true)}
           >
             <AnimatePresence initial={false} custom={direction}>
@@ -54,8 +56,9 @@ export function ParkImageCarousel({
                 variants={variants}
                 initial="enter"
                 animate="center"
+                loading="lazy"
                 exit="exit"
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
               />
             </AnimatePresence>
           </div>
@@ -63,26 +66,29 @@ export function ParkImageCarousel({
           <button
             aria-label="Next"
             onClick={() => paginate(1)}
-            className="p-2 rounded-full shadow-md bg-[rgb(var(--card))] hover:bg-[rgb(var(--card-secondary))]"
+            className="p-2 md:p-3 rounded-full shadow-md bg-[rgb(var(--card))] hover:bg-[rgb(var(--card-secondary))] transition-colors"
           >
-            <ArrowRight size={24} className="text-[rgb(var(--copy))]" />
+            <ArrowRight
+              size={20}
+              className="text-[rgb(var(--copy))] md:size-6"
+            />
           </button>
         </div>
 
-        {/* caption beneath image */}
+        {/* caption */}
         {images[index].caption && (
-          <div className="mt-3 px-2 text-sm text-[rgb(var(--copy-secondary))]">
+          <div className="mt-3 px-1 md:px-2 text-sm md:text-base text-[rgb(var(--copy-secondary))] text-center">
             {images[index].caption}
           </div>
         )}
 
-        {/* indicators beneath that */}
+        {/* indicators */}
         <div className="mt-4 flex justify-center space-x-2">
           {images.map((_, idx) => (
             <button
               key={idx}
               onClick={() => paginate(idx - index)}
-              className={`w-3 h-3 rounded-full focus:outline-none transition-transform ${
+              className={`w-2.5 h-2.5 md:w-3 md:h-3 rounded-full transition-transform focus:outline-none ${
                 idx === index
                   ? "bg-[rgb(var(--cta))] scale-125"
                   : "bg-[rgb(var(--copy-secondary))]/60 hover:bg-[rgb(var(--copy-secondary))]"
@@ -92,14 +98,14 @@ export function ParkImageCarousel({
         </div>
       </div>
 
-      {/* full‑screen modal */}
+      {/* modal */}
       {isModalOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm flex items-center justify-center z-50 px-4"
           onClick={() => setModalOpen(false)}
         >
           <button
-            className="absolute top-5 right-5 p-2 rounded-full bg-[rgba(var(--card),0.8)] hover:bg-[rgba(var(--card),1)] shadow-md"
+            className="absolute top-4 right-4 p-2 rounded-full bg-[rgba(var(--card),0.85)] hover:bg-[rgba(var(--card),1)] shadow-lg"
             aria-label="Close full view"
             onClick={(e) => {
               e.stopPropagation();
@@ -112,7 +118,7 @@ export function ParkImageCarousel({
             src={images[index].url}
             alt={images[index].altText}
             loading="lazy"
-            className="max-h-full max-w-full object-contain"
+            className="max-h-[90vh] max-w-full object-contain rounded-lg shadow-xl transition-all"
           />
         </div>
       )}
