@@ -4,6 +4,8 @@ import { ParkImageCarousel } from "../parks/ParkImagesCarousel";
 import { ExternalLink } from "lucide-react";
 import EntranceFeesSection from "../parks/EntranceFeeSection";
 import BackButton from "../test/BackButton";
+import { fetchWeather, type WeatherData } from "../../utils/fetchWeather";
+import WeatherCard from "./WeatherCard";
 
 type Park = {
   id: string;
@@ -36,6 +38,8 @@ const ParkDetail: React.FC = () => {
   const { id } = useParams();
   const [park, setPark] = useState<Park | null>(null);
   const [loading, setLoading] = useState(true);
+  const [weather, setWeather] = useState<WeatherData>(null);
+  const [weatherLoading, setWeatherLoading] = useState(true);
 
   const API_KEY = "5H2kKAyTFXd4yA6xZOSJgLbS6ocDzs8a1j37kQU1";
 
@@ -46,11 +50,21 @@ const ParkDetail: React.FC = () => {
           `https://developer.nps.gov/api/v1/parks?id=${id}&api_key=${API_KEY}`
         );
         const data = await response.json();
-        setPark(data.data[0]);
+        const fetchedPark = data.data[0];
+        setPark(fetchedPark);
+
+        // Fetch weather if coordinates are available
+        if (fetchedPark?.latitude && fetchedPark?.longitude) {
+          const lat = parseFloat(fetchedPark.latitude);
+          const lon = parseFloat(fetchedPark.longitude);
+          const weatherData = await fetchWeather(lat, lon);
+          setWeather(weatherData);
+        }
       } catch (error) {
         console.error("Error fetching park details:", error);
       } finally {
         setLoading(false);
+        setWeatherLoading(false);
       }
     };
 
@@ -77,9 +91,15 @@ const ParkDetail: React.FC = () => {
     <div className="bg-[rgb(var(--background))] min-h-screen text-[rgb(var(--copy-primary))]">
       <div className="max-w-5xl mx-auto px-6 py-10">
         <div className="mb-8 flex items-start justify-between">
-          <h1 className="text-4xl font-bold tracking-tight">{park.fullName}</h1>
+          <div>
+            <h1 className="text-4xl font-bold tracking-tight">
+              {park.fullName}
+            </h1>
+          </div>
           <BackButton />
         </div>
+        <WeatherCard weather={weather} loading={weatherLoading} />
+
         <section>
           <h2 className="text-2xl font-semibold mb-2">Overview</h2>
           <p className="text-lg leading-relaxed text-[rgb(var(--copy-secondary))] mb-10">
@@ -93,6 +113,7 @@ const ParkDetail: React.FC = () => {
 
         <div className="space-y-10">
           <section className="grid sm:grid-cols-2 gap-6 items-start">
+            {/* Details Card */}
             <div className="bg-[rgb(var(--card))] border border-[rgb(var(--border))] p-6 rounded-2xl shadow-sm">
               <h3 className="text-xl font-semibold mb-3">Details</h3>
               <p>
@@ -124,6 +145,7 @@ const ParkDetail: React.FC = () => {
               </p>
             </div>
 
+            {/* Directions Card */}
             <div className="bg-[rgb(var(--card))] border border-[rgb(var(--border))] p-6 rounded-2xl shadow-sm">
               <h3 className="text-xl font-semibold mb-3">Directions</h3>
               <p>{park.directionsInfo}</p>
