@@ -113,8 +113,8 @@ const ParkDetail: React.FC = () => {
         )}
 
         <div className="space-y-10">
-          <section className="flex justify-center">
-            <div className="w-full">
+          <section className="flex justify-center items-center">
+            <div className="">
               <DirectionsCard
                 directionsInfo={park.directionsInfo}
                 directionsUrl={park.directionsUrl}
