@@ -2,13 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RegionalParks from "./RegionalParks";
 import LoadingSpinner from "../LoadingSpinner";
-
-type Park = {
-  id: string;
-  fullName: string;
-  description: string;
-  images: { url: string; altText: string }[];
-};
+import type { Park } from "../../types";
 
 const API_KEY = "5H2kKAyTFXd4yA6xZOSJgLbS6ocDzs8a1j37kQU1";
 

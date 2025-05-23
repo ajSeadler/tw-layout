@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../LoadingSpinner";
-
-type Park = {
-  id: string;
-  fullName: string;
-  description: string;
-  images: { url: string; altText: string }[];
-};
+import type { Park } from "../../types";
 
 const REGIONS: { [key: string]: string[] } = {
   West: ["CA", "WA", "OR", "NV", "ID"],

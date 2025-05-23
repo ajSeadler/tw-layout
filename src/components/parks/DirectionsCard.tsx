@@ -15,7 +15,7 @@ const DirectionsCard: React.FC<DirectionsCardProps> = ({
   longitude,
 }) => {
   return (
-    <div className="bg-[rgb(var(--card))] border border-[rgb(var(--border))] p-6 rounded-2xl shadow-md transition hover:shadow-lg w-full max-w-3xl">
+    <div className="bg-[rgb(var(--card))] border border-[rgb(var(--border))] p-6 rounded-2xl shadow-md transition hover:shadow-lg w-full">
       <div className="flex items-center gap-2 mb-3 text-[rgb(var(--copy-primary))]">
         <MapPin size={20} />
         <h3 className="text-xl font-semibold tracking-tight">Directions</h3>

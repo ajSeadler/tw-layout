@@ -50,7 +50,7 @@ const WeatherCard = ({ weather, loading }: WeatherProps) => {
   if (!weather) return null;
 
   return (
-    <div className="bg-[rgb(var(--card))] border border-[rgb(var(--border))] p-5 rounded-2xl shadow-sm mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+    <div className="border border-[rgb(var(--border))] p-5 rounded-2xl shadow-sm mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
       <div className="flex items-center gap-4">
         <div className="text-[rgb(var(--cta))]">
           {getWeatherIcon(weather.description)}
