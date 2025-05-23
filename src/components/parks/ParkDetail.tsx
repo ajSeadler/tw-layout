@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ParkImageCarousel } from "../parks/ParkImagesCarousel";
@@ -42,6 +43,8 @@ const ParkDetail: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [weather, setWeather] = useState<WeatherData>(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const API_KEY = "5H2kKAyTFXd4yA6xZOSJgLbS6ocDzs8a1j37kQU1";
 
@@ -55,7 +58,6 @@ const ParkDetail: React.FC = () => {
         const fetchedPark = data.data[0];
         setPark(fetchedPark);
 
-        // Fetch weather if coordinates are available
         if (fetchedPark?.latitude && fetchedPark?.longitude) {
           const lat = parseFloat(fetchedPark.latitude);
           const lon = parseFloat(fetchedPark.longitude);
@@ -73,9 +75,42 @@ const ParkDetail: React.FC = () => {
     fetchPark();
   }, [id]);
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+  const triggerToast = (message: string) => {
+    setToastMessage(message);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 2500);
+  };
+
+  const saveToItinerary = () => {
+    if (!park) return;
+
+    const current = localStorage.getItem("tripItinerary");
+    const itinerary = current ? JSON.parse(current) : [];
+
+    const alreadyAdded = itinerary.some((item: any) => item.id === park.id);
+    if (alreadyAdded) {
+      triggerToast("Already in itinerary!");
+      return;
+    }
+
+    itinerary.push({
+      id: park.id,
+      fullName: park.fullName,
+      parkCode: park.parkCode,
+      latitude: park.latitude,
+      longitude: park.longitude,
+      states: park.states,
+      images: park.images,
+      description: park.description,
+      arrival: null,
+      departure: null,
+    });
+
+    localStorage.setItem("tripItinerary", JSON.stringify(itinerary));
+    triggerToast("Park added to itinerary!");
+  };
+
+  if (loading) return <LoadingSpinner />;
 
   if (!park) {
     return (
@@ -86,22 +121,27 @@ const ParkDetail: React.FC = () => {
   }
 
   return (
-    <div className="bg-[rgb(var(--background))] min-h-screen text-[rgb(var(--copy-primary))]">
+    <div className="bg-[rgb(var(--background))] min-h-screen text-[rgb(var(--copy-primary))] relative">
       <div className="max-w-5xl mx-auto px-6 py-10">
         <div className="mb-8 flex items-start justify-between">
-          <div>
-            <h1 className="text-4xl font-bold tracking-tight">
-              {park.fullName}
-            </h1>
-          </div>
+          <h1 className="text-4xl font-bold tracking-tight">{park.fullName}</h1>
           <BackButton />
         </div>
+
         <WeatherCard weather={weather} loading={weatherLoading} />
+
+        <button
+          onClick={saveToItinerary}
+          className="mb-6 px-6 py-3 rounded-xl bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))] font-semibold transition duration-200"
+        >
+          Save to Itinerary
+        </button>
 
         <section>
           <h2 className="text-2xl font-semibold mb-2">Overview</h2>
-          <p className="flex flex-row items-center gap-2">
-            <MapPin className="text-[rgb(var(--cta))]" /> {park.states}
+          <p className="flex items-center gap-2">
+            <MapPin className="text-[rgb(var(--cta))]" />
+            {park.states}
           </p>
           <p className="text-lg leading-relaxed text-[rgb(var(--copy-secondary))] mb-10">
             {park.description}
@@ -113,15 +153,13 @@ const ParkDetail: React.FC = () => {
         )}
 
         <div className="space-y-10">
-          <section className="flex justify-center items-center">
-            <div className="">
-              <DirectionsCard
-                directionsInfo={park.directionsInfo}
-                directionsUrl={park.directionsUrl}
-                latitude={park.latitude}
-                longitude={park.longitude}
-              />
-            </div>
+          <section>
+            <DirectionsCard
+              directionsInfo={park.directionsInfo}
+              directionsUrl={park.directionsUrl}
+              latitude={park.latitude}
+              longitude={park.longitude}
+            />
           </section>
 
           {park.operatingHours.length > 0 && (
@@ -197,6 +235,12 @@ const ParkDetail: React.FC = () => {
           )}
         </div>
       </div>
+
+      {showToast && (
+        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg transition-opacity duration-300 z-50">
+          {toastMessage}
+        </div>
+      )}
     </div>
   );
 };
