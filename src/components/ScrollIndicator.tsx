@@ -70,7 +70,7 @@ export function ScrollIndicator() {
       animate={controls}
       variants={variants}
       aria-hidden="true"
-      className="pointer-events-none fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 bg-[rgb(var(--cta))]/80 text-white backdrop-blur-md rounded-full shadow-lg ring-1 ring-white/20 z-50"
+      className="pointer-events-none fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 px-4 py-2 bg-[rgb(var(--cta))]/80 text-white backdrop-blur-md rounded-full shadow-lg ring-1 ring-white/20 z-50"
     >
       <svg
         className="w-5 h-5"

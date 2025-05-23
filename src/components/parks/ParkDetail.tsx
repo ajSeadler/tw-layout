@@ -97,7 +97,7 @@ const ParkDetail: React.FC = () => {
   return (
     <div className="bg-[rgb(var(--background))] min-h-screen text-[rgb(var(--copy-primary))] relative">
       {/* Hero Carousel + Header Overlay */}
-      <div className="relative w-full h-[75vh] sm:h-[75vh] md:h-[90vh] mb-10 overflow-hidden">
+      <div className="relative w-full h-[95vh] sm:h-[75vh] md:h-[95vh] mb-10 overflow-hidden">
         {/* Carousel fills entire container */}
         <ParkImageCarousel images={park.images.slice(0, 4)} />
 
@@ -125,12 +125,6 @@ const ParkDetail: React.FC = () => {
             {park.description}
           </p>
           <WeatherCard weather={weather} loading={weatherLoading} />
-          <button
-            onClick={saveToItinerary}
-            className="mt-6 px-6 py-3 rounded-xl bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))] font-semibold transition"
-          >
-            Save to Itinerary
-          </button>
         </section>
 
         <section>
@@ -141,6 +135,12 @@ const ParkDetail: React.FC = () => {
             longitude={park.longitude}
           />
         </section>
+        <button
+          onClick={saveToItinerary}
+          className="mt-6 px-6 py-3 rounded-xl bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))] font-semibold transition"
+        >
+          Save to Itinerary
+        </button>
 
         {park.operatingHours.length > 0 && (
           <section>

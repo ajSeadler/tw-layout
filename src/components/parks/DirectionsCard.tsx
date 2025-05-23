@@ -14,6 +14,8 @@ const DirectionsCard: React.FC<DirectionsCardProps> = ({
   latitude,
   longitude,
 }) => {
+  const mapSrc = `https://www.google.com/maps/embed/v1/view?key=AIzaSyBS9_PWMc0SPxL8Pl_EIAWk7vPxh6UDtZY&center=${latitude},${longitude}&zoom=14&maptype=satellite`;
+
   return (
     <div className="bg-[rgb(var(--card))] border border-[rgb(var(--border))] p-6 rounded-2xl shadow-md transition hover:shadow-lg w-full">
       <div className="flex items-center gap-2 mb-3 text-[rgb(var(--copy-primary))]">
@@ -43,8 +45,10 @@ const DirectionsCard: React.FC<DirectionsCardProps> = ({
           width="100%"
           height="250"
           className="w-full border-0"
-          src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBS9_PWMc0SPxL8Pl_EIAWk7vPxh6UDtZY&q=${latitude},${longitude}&zoom=12`}
+          src={mapSrc}
           allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
         />
       </div>
     </div>
