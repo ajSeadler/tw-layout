@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ParkImageCarousel } from "../parks/ParkImagesCarousel";
 import EntranceFeesSection from "../parks/EntranceFeeSection";
 import BackButton from "../test/BackButton";
 import { fetchWeather, type WeatherData } from "../../utils/fetchWeather";
@@ -10,6 +9,7 @@ import DirectionsCard from "./DirectionsCard";
 import LoadingSpinner from "../LoadingSpinner";
 import { MapPin } from "lucide-react";
 import type { Park } from "../../types";
+import { ParkImageCarousel } from "./ParkImagesCarousel";
 
 const ParkDetail: React.FC = () => {
   const { id } = useParams();
@@ -96,10 +96,17 @@ const ParkDetail: React.FC = () => {
 
   return (
     <div className="bg-[rgb(var(--background))] min-h-screen text-[rgb(var(--copy-primary))] relative">
-      {/* Hero Carousel + Header Overlay */}
+      {/* Hero Image + Header Overlay */}
       <div className="relative w-full h-[95vh] sm:h-[75vh] md:h-[95vh] mb-10 overflow-hidden">
-        {/* Carousel fills entire container */}
-        <ParkImageCarousel images={park.images.slice(0, 4)} />
+        {/* Single Hero Image */}
+        {park.images?.[0]?.url && (
+          <img
+            src={park.images[0].url}
+            alt={park.images[0].altText || "Park Image"}
+            className="absolute inset-0 w-full h-full object-cover object-center"
+            loading="lazy"
+          />
+        )}
 
         {/* Top-to-transparent gradient for text legibility */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-transparent to-transparent pointer-events-none" />
@@ -141,6 +148,7 @@ const ParkDetail: React.FC = () => {
         >
           Save to Itinerary
         </button>
+        <ParkImageCarousel images={park.images.slice(0, 4)} />
 
         {park.operatingHours.length > 0 && (
           <section>
