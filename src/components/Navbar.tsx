@@ -41,7 +41,7 @@ const Navbar: React.FC = () => {
     <header
       className={`sticky top-0 z-50 transition-transform duration-300 ${
         showNavbar ? "translate-y-0" : "-translate-y-full"
-      } backdrop-blur-md bg-[rgb(var(--card)/85%)] border-b border-[rgb(var(--border))] shadow-sm`}
+      }  bg-[rgb(var(--card))] border-b border-[rgb(var(--border))] shadow-sm`}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
         {/* Logo */}
