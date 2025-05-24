@@ -97,8 +97,8 @@ const ParkDetail: React.FC = () => {
   return (
     <div className="bg-[rgb(var(--background))] min-h-screen text-[rgb(var(--copy-primary))] relative">
       {/* Hero Image + Header Overlay */}
-      <div className="relative w-full h-[95vh] sm:h-[75vh] md:h-[95vh] mb-10 overflow-hidden">
-        {/* Single Hero Image */}
+      <div className="relative w-full h-[90vh] sm:h-[75vh] md:h-[90vh] mb-12 overflow-hidden  shadow-lg">
+        {/* Background Image */}
         {park.images?.[0]?.url && (
           <img
             src={park.images[0].url}
@@ -108,15 +108,25 @@ const ParkDetail: React.FC = () => {
           />
         )}
 
-        {/* Top-to-transparent gradient for text legibility */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-transparent to-transparent pointer-events-none" />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
 
-        {/* Title + Back Button overlaid */}
-        <div className="absolute inset-x-0 top-4 flex items-center justify-between px-4 z-20">
-          <h1 className="text-white text-xl sm:text-3xl md:text-4xl font-bold leading-tight">
-            {park.fullName}
-          </h1>
-          <BackButton />
+        {/* Overlay Content */}
+        <div className="absolute inset-0 z-20 flex flex-col justify-between p-4 sm:p-6 md:p-10">
+          {/* Top Row: Title & Button */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <h1 className="text-white text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight drop-shadow-md">
+              {park.fullName}
+            </h1>
+            <button
+              onClick={saveToItinerary}
+              className="self-start sm:self-auto px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))] font-semibold text-sm sm:text-base transition-all shadow-md"
+            >
+              Save to Itinerary
+            </button>
+          </div>
+
+          {/* Optional: You could add a subtitle or additional info here at the bottom */}
         </div>
       </div>
 
@@ -142,12 +152,7 @@ const ParkDetail: React.FC = () => {
             longitude={park.longitude}
           />
         </section>
-        <button
-          onClick={saveToItinerary}
-          className="mt-6 px-6 py-3 rounded-xl bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))] font-semibold transition"
-        >
-          Save to Itinerary
-        </button>
+
         <ParkImageCarousel images={park.images.slice(0, 4)} />
 
         {park.operatingHours.length > 0 && (
@@ -223,6 +228,7 @@ const ParkDetail: React.FC = () => {
             </ul>
           </section>
         )}
+        <BackButton />
       </div>
 
       {/* Toast */}
