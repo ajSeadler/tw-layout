@@ -94,10 +94,11 @@ export function ParkImageCarousel({ images }: { images: Image[] }) {
       {/* Caption below carousel */}
       {images[index].caption && (
         <div
-          className="max-w-3xl mx-auto mt-4 p-4 rounded-lg bg-[rgb(var(--card))] border border-[rgb(var(--border))] text-[rgb(var(--copy))] text-center text-sm sm:text-base shadow-sm"
+          className="max-w-2xl mx-auto mt-6 px-6 py-4 rounded-2xl bg-[rgb(var(--card))] border border-[rgb(var(--border))] text-[rgb(var(--copy-secondary))] text-center text-base sm:text-lg leading-relaxed tracking-wide shadow-md italic"
           aria-live="polite"
         >
-          {images[index].caption}
+          <div className="mb-2 border-t border-[rgb(var(--cta))] w-12 mx-auto" />
+          <p>{images[index].caption}</p>
         </div>
       )}
 

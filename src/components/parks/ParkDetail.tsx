@@ -97,7 +97,7 @@ const ParkDetail: React.FC = () => {
   return (
     <div className="bg-[rgb(var(--background))] min-h-screen text-[rgb(var(--copy-primary))] relative">
       {/* Hero Image + Header Overlay */}
-      <div className="relative w-full h-[90vh] sm:h-[75vh] md:h-[90vh] mb-12 overflow-hidden  shadow-lg">
+      <div className="relative w-full h-[90vh] sm:h-[75vh] md:h-[95vh] mb-12 overflow-hidden  shadow-lg">
         {/* Background Image */}
         {park.images?.[0]?.url && (
           <img
@@ -118,12 +118,6 @@ const ParkDetail: React.FC = () => {
             <h1 className="text-white text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight drop-shadow-md">
               {park.fullName}
             </h1>
-            <button
-              onClick={saveToItinerary}
-              className="self-start sm:self-auto px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))] font-semibold text-sm sm:text-base transition-all shadow-md"
-            >
-              Save to Itinerary
-            </button>
           </div>
 
           {/* Optional: You could add a subtitle or additional info here at the bottom */}
@@ -228,12 +222,23 @@ const ParkDetail: React.FC = () => {
             </ul>
           </section>
         )}
+
+        <button
+          onClick={saveToItinerary}
+          className="self-start sm:self-auto px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))] font-semibold text-sm sm:text-base transition-all shadow-md"
+        >
+          Save to Itinerary
+        </button>
         <BackButton />
       </div>
 
       {/* Toast */}
       {showToast && (
-        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg z-50">
+        <div
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 px-5 py-3 sm:px-6 sm:py-4 rounded-2xl shadow-xl z-50 bg-[rgb(var(--cta))] text-[rgb(var(--cta-text))] text-sm sm:text-base font-medium backdrop-blur-sm ring-1 ring-[rgb(var(--border))] transition-all duration-300 ease-out"
+          role="status"
+          aria-live="polite"
+        >
           {toastMessage}
         </div>
       )}

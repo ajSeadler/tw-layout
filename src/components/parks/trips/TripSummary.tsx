@@ -278,11 +278,11 @@ const TripSummary: React.FC = () => {
   return (
     <div className="min-h-screen bg-[rgb(var(--background))] text-[rgb(var(--copy-primary))] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto space-y-12">
-        <header className="text-center space-y-2">
+        {/* <header className="text-center space-y-2">
           <p className="text-lg font-semibold text-[rgb(var(--cta))]">
             A complete overview of all your planned national park stops.
           </p>
-        </header>
+        </header> */}
 
         {/* Start‐location controls */}
         <div className="w-full max-w-md mx-auto bg-[rgb(var(--card))] p-2 rounded-full shadow-sm">
