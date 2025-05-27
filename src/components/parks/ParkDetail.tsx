@@ -112,10 +112,10 @@ const ParkDetail: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
 
         {/* Overlay Content */}
-        <div className="absolute inset-0 z-20 flex flex-col justify-between p-4 sm:p-6 md:p-10">
+        <div className="absolute inset-0 z-20 flex flex-col justify-between p-4 sm:p-10 md:p-4">
           {/* Top Row: Title & Button */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <h1 className="text-white text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight drop-shadow-md">
+            <h1 className="text-white text-xl sm:text-2xl md:text-2xl font-bold tracking-tight drop-shadow-md">
               {park.fullName}
             </h1>
           </div>
