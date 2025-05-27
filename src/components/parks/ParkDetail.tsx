@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import EntranceFeesSection from "../parks/EntranceFeeSection";
 import BackButton from "../test/BackButton";
 import { fetchWeather, type WeatherData } from "../../utils/fetchWeather";
@@ -11,43 +12,49 @@ import { MapPin } from "lucide-react";
 import type { Park } from "../../types";
 import { ParkImageCarousel } from "./ParkImagesCarousel";
 
+const API_KEY = "5H2kKAyTFXd4yA6xZOSJgLbS6ocDzs8a1j37kQU1";
+
+// Fetch function explicitly typed to return Park
+const fetchParkById = async (id: string): Promise<Park> => {
+  const res = await fetch(
+    `https://developer.nps.gov/api/v1/parks?id=${id}&api_key=${API_KEY}`
+  );
+  if (!res.ok) throw new Error("Failed to fetch park");
+  const data = await res.json();
+  return data.data[0] as Park;
+};
+
 const ParkDetail: React.FC = () => {
-  const { id } = useParams();
-  const [park, setPark] = useState<Park | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [weather, setWeather] = useState<WeatherData>(null);
-  const [weatherLoading, setWeatherLoading] = useState(true);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
+  const { id } = useParams<{ id: string }>();
+  const [scrolled, setScrolled] = useState(false);
 
-  const API_KEY = "5H2kKAyTFXd4yA6xZOSJgLbS6ocDzs8a1j37kQU1";
+  const {
+    data: park,
+    isLoading,
+    isError,
+  } = useQuery<Park>({
+    queryKey: ["park", id],
+    queryFn: () => fetchParkById(id!),
+    enabled: !!id,
+  });
 
-  useEffect(() => {
-    const fetchPark = async () => {
-      try {
-        const response = await fetch(
-          `https://developer.nps.gov/api/v1/parks?id=${id}&api_key=${API_KEY}`
-        );
-        const data = await response.json();
-        const fetchedPark = data.data[0];
-        setPark(fetchedPark);
+  const { data: weather, isLoading: weatherLoading } = useQuery<WeatherData>({
+    queryKey: ["weather", park?.latitude, park?.longitude],
+    queryFn: () =>
+      fetchWeather(parseFloat(park!.latitude), parseFloat(park!.longitude)),
+    enabled: !!park?.latitude && !!park?.longitude,
+  });
 
-        if (fetchedPark?.latitude && fetchedPark?.longitude) {
-          const lat = parseFloat(fetchedPark.latitude);
-          const lon = parseFloat(fetchedPark.longitude);
-          const weatherData = await fetchWeather(lat, lon);
-          setWeather(weatherData);
-        }
-      } catch (error) {
-        console.error("Error fetching park details:", error);
-      } finally {
-        setLoading(false);
-        setWeatherLoading(false);
-      }
+  React.useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 30); // Adjust scroll threshold here
     };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-    fetchPark();
-  }, [id]);
+  const [showToast, setShowToast] = React.useState(false);
+  const [toastMessage, setToastMessage] = React.useState("");
 
   const triggerToast = (message: string) => {
     setToastMessage(message);
@@ -84,9 +91,9 @@ const ParkDetail: React.FC = () => {
     triggerToast("Park added to itinerary!");
   };
 
-  if (loading) return <LoadingSpinner />;
+  if (isLoading) return <LoadingSpinner />;
 
-  if (!park) {
+  if (isError || !park) {
     return (
       <div className="p-8 text-center text-red-500 font-semibold">
         Park not found.
@@ -96,31 +103,45 @@ const ParkDetail: React.FC = () => {
 
   return (
     <div className="bg-[rgb(var(--background))] min-h-screen text-[rgb(var(--copy-primary))] relative">
-      {/* Hero Image + Header Overlay */}
-      <div className="relative w-full h-[90vh] sm:h-[75vh] md:h-[95vh] mb-12 overflow-hidden  shadow-lg">
-        {/* Background Image */}
-        {park.images?.[0]?.url && (
-          <img
-            src={park.images[0].url}
-            alt={park.images[0].altText || "Park Image"}
-            className="absolute inset-0 w-full h-full object-cover object-center"
-            loading="lazy"
-          />
-        )}
+      {/* Hero Image + Header Overlay with scroll shrinking and rounding */}
+      <div
+        className={`
+    transition-all duration-500 ease-in-out
+    ${scrolled ? "px-6 sm:px-12 md:px-20" : "px-0"}
+  `}
+      >
+        <div
+          className={`
+      relative w-full transition-all duration-500 ease-in-out
+      ${scrolled ? "max-w-5xl rounded-3xl shadow-2xl" : "max-w-full"}
+      overflow-hidden
+      ${scrolled ? "h-[300px]" : "h-[90vh]"}
+      mx-auto
+    `}
+        >
+          {park.images?.[0]?.url && (
+            <img
+              src={park.images[0].url}
+              alt={park.images[0].altText || "Park Image"}
+              className="w-full h-full object-cover object-center"
+              loading="eager"
+              decoding="async"
+            />
+          )}
 
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
-
-        {/* Overlay Content */}
-        <div className="absolute inset-0 z-20 flex flex-col justify-between p-4 sm:p-10 md:p-4">
-          {/* Top Row: Title & Button */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <h1 className="text-white text-xl sm:text-2xl md:text-2xl font-bold tracking-tight drop-shadow-md">
+          <div
+            className={`
+        absolute bottom-10 left-8 sm:left-16 md:left-20
+        text-white drop-shadow-lg
+        max-w-xl
+        transition-opacity duration-700 ease-in-out
+        ${scrolled ? "opacity-80" : "opacity-100"}
+      `}
+          >
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
               {park.fullName}
             </h1>
           </div>
-
-          {/* Optional: You could add a subtitle or additional info here at the bottom */}
         </div>
       </div>
 
