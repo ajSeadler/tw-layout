@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import EntranceFeesSection from "../parks/EntranceFeeSection";
@@ -26,7 +26,7 @@ const fetchParkById = async (id: string): Promise<Park> => {
 
 const ParkDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0); // 0 (top) to 1 (scrolled)
 
   const {
     data: park,
@@ -45,10 +45,15 @@ const ParkDetail: React.FC = () => {
     enabled: !!park?.latitude && !!park?.longitude,
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
+    const maxScroll = 100; // px over which transition happens
+
     const onScroll = () => {
-      setScrolled(window.scrollY > 30); // Adjust scroll threshold here
+      const currentScroll = window.scrollY;
+      const progress = Math.min(currentScroll / maxScroll, 1);
+      setScrollProgress(progress);
     };
+
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -101,52 +106,71 @@ const ParkDetail: React.FC = () => {
     );
   }
 
+  // Calculate dynamic height for header (interpolating between 90vh and 50px)
+  const maxHeightPx = window.innerHeight * 0.9;
+  const minHeightPx = 50;
+  const containerHeight =
+    maxHeightPx - scrollProgress * (maxHeightPx - minHeightPx);
+
+  // Interpolating font size classes (just 2 states for simplicity)
+  const titleClass =
+    scrollProgress > 0.5
+      ? "text-sm sm:text-sm font-extrabold"
+      : "text-3xl sm:text-4xl font-semibold";
+
+  // Overlay opacity from 0.3 (no scroll) to 0.7 (scrolled)
+  const overlayOpacity = 0.3 + scrollProgress * 0.4;
+
   return (
     <div className="bg-[rgb(var(--background))] min-h-screen text-[rgb(var(--copy-primary))] relative">
-      {/* Hero Image + Header Overlay with scroll shrinking and rounding */}
+      {/* Hero Image + Header Overlay with smooth shrinking and overlay */}
       <div
-        className={`
-    transition-all duration-500 ease-in-out
-    ${scrolled ? "px-6 sm:px-12 md:px-20" : "px-0"}
-  `}
+        className="w-full sticky top-0 z-20 overflow-hidden"
+        style={{
+          height: `${containerHeight}px`,
+          transition: "height 0.3s ease-in-out",
+        }}
       >
-        <div
-          className={`
-      relative w-full transition-all duration-500 ease-in-out
-      ${scrolled ? "max-w-5xl rounded-3xl shadow-2xl" : "max-w-full"}
-      overflow-hidden
-      ${scrolled ? "h-[300px]" : "h-[90vh]"}
-      mx-auto
-    `}
-        >
-          {park.images?.[0]?.url && (
-            <img
-              src={park.images[0].url}
-              alt={park.images[0].altText || "Park Image"}
-              className="w-full h-full object-cover object-center"
-              loading="eager"
-              decoding="async"
-            />
-          )}
+        {park.images?.[0]?.url && (
+          <img
+            src={park.images[0].url}
+            alt={park.images[0].altText || "Park Image"}
+            className="w-full h-full object-cover object-center"
+            style={{
+              transition: "filter 0.3s ease-in-out",
+              filter: `brightness(${1 - overlayOpacity})`,
+            }}
+            loading="eager"
+            decoding="async"
+          />
+        )}
 
-          <div
-            className={`
-        absolute bottom-10 left-8 sm:left-16 md:left-20
-        text-white drop-shadow-lg
-        max-w-xl
-        transition-opacity duration-700 ease-in-out
-        ${scrolled ? "opacity-80" : "opacity-100"}
-      `}
-          >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
-              {park.fullName}
-            </h1>
-          </div>
+        {/* Overlay for text readability */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `linear-gradient(to bottom, rgba(0,0,0,${overlayOpacity}) 0%, rgba(0,0,0,0) 60%)`,
+            transition: "background 0.3s ease-in-out",
+          }}
+        />
+
+        {/* Park Name */}
+        <div
+          className={`absolute bottom-4 left-6 sm:left-12 text-white drop-shadow-lg transition-all duration-300 ease-in-out ${titleClass}`}
+          style={{
+            padding: "0.25rem 0.5rem",
+            borderRadius: "0.5rem",
+          }}
+        >
+          <h1 className="tracking-tight leading-tight">{park.fullName}</h1>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-6 pb-16 space-y-10">
+      {/* Main Content with dynamic paddingTop */}
+      <div
+        className="max-w-6xl mx-auto px-6 pb-16 space-y-10"
+        style={{ paddingTop: maxHeightPx }}
+      >
         <section>
           <h2 className="text-2xl font-semibold mb-2">Overview</h2>
           <p className="flex items-center gap-2 mb-4">
