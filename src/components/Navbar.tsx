@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ThemeSwitcher from "./ThemeSwitcher";
-import { MountainIcon } from "lucide-react";
+import { MountainIcon, Menu as MenuIcon, X as XIcon } from "lucide-react";
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const navigate = useNavigate();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const links = [
     { name: "Home", path: "/" },
@@ -17,22 +19,48 @@ const Navbar: React.FC = () => {
     { name: "Alerts", path: "/alerts" },
   ];
 
+  // Hide/show on scroll
   useEffect(() => {
     let lastScrollY = window.scrollY;
-
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 80) {
-        setShowNavbar(false); // scroll down
-      } else {
-        setShowNavbar(true); // scroll up
-      }
-      lastScrollY = currentScrollY;
+      const current = window.scrollY;
+      setShowNavbar(!(current > lastScrollY && current > 80));
+      lastScrollY = current;
     };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Close on click outside & Escape
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && menuOpen) {
+        setMenuOpen(false);
+        buttonRef.current?.focus();
+      }
+    };
+    const onClickOutside = (e: MouseEvent) => {
+      if (
+        menuOpen &&
+        menuRef.current &&
+        !menuRef.current.contains(e.target as Node) &&
+        !buttonRef.current?.contains(e.target as Node)
+      ) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("mousedown", onClickOutside);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("mousedown", onClickOutside);
+    };
+  }, [menuOpen]);
+
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+  }, [menuOpen]);
 
   return (
     <header
@@ -46,12 +74,12 @@ const Navbar: React.FC = () => {
           role="button"
           tabIndex={0}
           onClick={() => navigate("/")}
-          onKeyDown={(e) => (e.key === "Enter" ? navigate("/") : null)}
+          onKeyDown={(e) => e.key === "Enter" && navigate("/")}
           className="flex items-center gap-3 cursor-pointer select-none group"
           aria-label="Navigate to homepage"
         >
           <MountainIcon className="w-7 h-7 text-[rgb(var(--cta))] group-hover:text-[rgb(var(--cta-active))] transition-colors duration-300" />
-          <span className="text-2xl font-extrabold text-[rgb(var(--copy-primary))] tracking-tight select-text">
+          <span className="text-2xl font-extrabold text-[rgb(var(--copy-primary))] tracking-tight">
             ExploreParks
           </span>
         </div>
@@ -65,52 +93,47 @@ const Navbar: React.FC = () => {
               className="relative text-[rgb(var(--copy-secondary))] font-semibold text-sm uppercase tracking-wide hover:text-[rgb(var(--copy-primary))] transition-colors duration-300 px-1"
             >
               {name}
-              <span
-                className="absolute left-0 -bottom-1 w-0 h-0.5 bg-[rgb(var(--cta))] transition-all duration-300 group-hover:w-full"
-                aria-hidden="true"
-              />
+              <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[rgb(var(--cta))] transition-all duration-300 group-hover:w-full" />
             </Link>
           ))}
         </nav>
 
-        {/* Right Actions */}
+        {/* Actions */}
         <div className="flex items-center gap-5">
-          <ThemeSwitcher />
+          {/* Desktop theme toggle */}
+          <div className="hidden md:block">
+            <ThemeSwitcher />
+          </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile menu button */}
           <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label={`${menuOpen ? "Close" : "Open"} navigation menu`}
+            ref={buttonRef}
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label={
+              menuOpen ? "Close navigation menu" : "Open navigation menu"
+            }
             aria-expanded={menuOpen}
-            className="md:hidden relative w-8 h-8 flex flex-col justify-center items-center gap-1 cursor-pointer"
+            aria-controls="mobile-menu"
+            className="md:hidden p-2"
           >
-            {/* Hamburger lines */}
-            <span
-              className={`block w-6 h-[2px] bg-[rgb(var(--copy-primary))] rounded transition-transform duration-300 ease-in-out origin-left ${
-                menuOpen ? "rotate-45 translate-y-2" : ""
-              }`}
-            />
-            <span
-              className={`block w-6 h-[2px] bg-[rgb(var(--copy-primary))] rounded transition-opacity duration-300 ease-in-out ${
-                menuOpen ? "opacity-0" : "opacity-100"
-              }`}
-            />
-            <span
-              className={`block w-6 h-[2px] bg-[rgb(var(--copy-primary))] rounded transition-transform duration-300 ease-in-out origin-left ${
-                menuOpen ? "-rotate-45 -translate-y-2" : ""
-              }`}
-            />
+            {menuOpen ? (
+              <XIcon className="w-6 h-6 text-[rgb(var(--copy-primary))]" />
+            ) : (
+              <MenuIcon className="w-6 h-6 text-[rgb(var(--copy-primary))]" />
+            )}
           </button>
         </div>
       </div>
 
       {/* Mobile Nav */}
       <nav
-        className={`md:hidden max-w-full bg-[rgba(var(--card),0.95)] border-t border-[rgba(var(--border),0.3)] backdrop-blur-sm overflow-hidden transition-max-height duration-500 ease-in-out ${
-          menuOpen ? "max-h-[400px] py-4" : "max-h-0 py-0"
+        id="mobile-menu"
+        ref={menuRef}
+        className={`md:hidden fixed inset-x-0 top-[64px] bg-[rgba(var(--card),0.95)] border-t border-[rgba(var(--border),0.3)] backdrop-blur-sm overflow-hidden transition-max-height duration-500 ease-in-out ${
+          menuOpen ? "max-h-screen py-6" : "max-h-0 py-0"
         }`}
       >
-        <div className="flex flex-col px-6 space-y-4">
+        <div className="flex flex-col px-6 space-y-6">
           {links.map(({ name, path }) => (
             <Link
               key={name}
@@ -121,6 +144,11 @@ const Navbar: React.FC = () => {
               {name}
             </Link>
           ))}
+
+          {/* Mobile theme toggle */}
+          <div className="pt-6 border-t border-[rgba(var(--border),0.3)]">
+            <ThemeSwitcher />
+          </div>
         </div>
       </nav>
     </header>

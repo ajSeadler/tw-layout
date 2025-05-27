@@ -10,8 +10,8 @@ export default function ThemeSwitcher() {
       onClick={() => navigate("/settings")}
       aria-label="Open Theme Settings"
       className="
-        flex items-center gap-2 p-2 rounded-full
-        bg-[rgb(var(--background))]
+        flex items-center rounded-full
+       
         border border-[rgb(var(--border))]
         hover:scale-105 hover:shadow-[0_0_12px_rgba(var(--cta),0.5)]
         transition-all duration-200 ease-out
