@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import RegionalParks from "./RegionalParks";
 import LoadingSpinner from "../LoadingSpinner";
 import type { Park } from "../../types";
 
@@ -178,7 +177,6 @@ const NationalParks: React.FC = () => {
           )}
         </div>
       </div>
-      <RegionalParks />
     </>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { MountainIcon, Menu as MenuIcon, X as XIcon } from "lucide-react";
 
@@ -7,6 +7,7 @@ const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -19,7 +20,6 @@ const Navbar: React.FC = () => {
     { name: "Alerts", path: "/alerts" },
   ];
 
-  // Hide/show on scroll
   useEffect(() => {
     let lastScrollY = window.scrollY;
     const handleScroll = () => {
@@ -31,7 +31,6 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close on click outside & Escape
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && menuOpen) {
@@ -57,14 +56,13 @@ const Navbar: React.FC = () => {
     };
   }, [menuOpen]);
 
-  // Lock body scroll when menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
   }, [menuOpen]);
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[rgba(var(--card),0.85)] border-b border-[rgba(var(--border),0.3)] shadow-md transition-transform duration-350 ${
+      className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[rgba(var(--card),0.85)]shadow-md transition-transform duration-350 ${
         showNavbar ? "translate-y-0" : "-translate-y-full"
       }`}
     >
@@ -86,16 +84,26 @@ const Navbar: React.FC = () => {
 
         {/* Desktop Links */}
         <nav className="hidden md:flex space-x-10">
-          {links.map(({ name, path }) => (
-            <Link
-              key={name}
-              to={path}
-              className="relative text-[rgb(var(--copy-secondary))] font-semibold text-sm uppercase tracking-wide hover:text-[rgb(var(--copy-primary))] transition-colors duration-300 px-1"
-            >
-              {name}
-              <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[rgb(var(--cta))] transition-all duration-300 group-hover:w-full" />
-            </Link>
-          ))}
+          {links.map(({ name, path }) => {
+            const isActive = location.pathname === path;
+            return (
+              <Link
+                key={name}
+                to={path}
+                className={`relative text-[rgb(var(--copy-secondary))] font-semibold text-sm uppercase tracking-wide hover:text-[rgb(var(--copy-primary))] transition-colors duration-300 px-1 ${
+                  isActive ? "text-[rgb(var(--cta))]" : ""
+                }`}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {name}
+                <span
+                  className={`absolute left-0 -bottom-1 h-[2px] bg-[rgb(var(--cta))] transition-all duration-300 ${
+                    isActive ? "w-full" : "w-0 group-hover:w-full"
+                  }`}
+                />
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Actions */}
@@ -134,16 +142,22 @@ const Navbar: React.FC = () => {
         }`}
       >
         <div className="flex flex-col px-6 space-y-6">
-          {links.map(({ name, path }) => (
-            <Link
-              key={name}
-              to={path}
-              onClick={() => setMenuOpen(false)}
-              className="text-[rgb(var(--copy-primary))] font-semibold text-lg uppercase tracking-wide hover:text-[rgb(var(--cta))] transition-colors duration-300"
-            >
-              {name}
-            </Link>
-          ))}
+          {links.map(({ name, path }) => {
+            const isActive = location.pathname === path;
+            return (
+              <Link
+                key={name}
+                to={path}
+                onClick={() => setMenuOpen(false)}
+                className={`text-[rgb(var(--copy-primary))] font-semibold text-lg uppercase tracking-wide hover:text-[rgb(var(--cta))] transition-colors duration-300 ${
+                  isActive ? "text-[rgb(var(--cta))]" : ""
+                }`}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {name}
+              </Link>
+            );
+          })}
 
           {/* Mobile theme toggle */}
           <div className="pt-6 border-t border-[rgba(var(--border),0.3)]">
