@@ -137,7 +137,7 @@ const Navbar: React.FC = () => {
       <nav
         id="mobile-menu"
         ref={menuRef}
-        className={`md:hidden fixed inset-x-0 top-[64px] bg-[rgba(var(--card),0.95)] border-t border-[rgba(var(--border),0.3)] backdrop-blur-sm overflow-hidden transition-max-height duration-500 ease-in-out ${
+        className={`md:hidden fixed inset-x-0 top-[64px] bg-[rgba(var(--card),0.95)]  backdrop-blur-sm overflow-hidden transition-max-height duration-500 ease-in-out ${
           menuOpen ? "max-h-screen py-6" : "max-h-0 py-0"
         }`}
       >
