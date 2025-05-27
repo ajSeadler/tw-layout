@@ -29,7 +29,7 @@ const API_KEY = "5H2kKAyTFXd4yA6xZOSJgLbS6ocDzs8a1j37kQU1";
 const RegionalParks: React.FC = () => {
   const [region, setRegion] = useState("West");
   const [parks, setParks] = useState<Park[]>([]);
-  const [start, setStart] = useState(0);
+  // const [start, setStart] = useState(0);
   const [loading, setLoading] = useState(false);
   const limit = 9;
 
@@ -48,7 +48,7 @@ const RegionalParks: React.FC = () => {
       );
       const data = await response.json();
       setParks(data.data);
-      setStart(startIndex);
+      // setStart(startIndex);
     } catch (error) {
       console.error("Failed to fetch regional parks:", error);
     } finally {
@@ -56,12 +56,12 @@ const RegionalParks: React.FC = () => {
     }
   };
 
-  const handleNext = () => fetchParks(region, start + limit);
-  const handlePrev = () => fetchParks(region, Math.max(0, start - limit));
+  // const handleNext = () => fetchParks(region, start + limit);
+  // const handlePrev = () => fetchParks(region, Math.max(0, start - limit));
 
   return (
     <section className="bg-[rgb(var(--background))] text-[rgb(var(--copy-primary))] px-6 mb-10">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold mb-6">Explore by Region</h2>
 
         {/* Region Tabs */}
@@ -81,17 +81,16 @@ const RegionalParks: React.FC = () => {
           ))}
         </div>
 
-        {/* Park Cards */}
+        {/* Park Cards - Horizontally Scrollable Row */}
         {loading ? (
           <LoadingSpinner />
         ) : (
           <>
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-6">
+            <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide py-4 px-2 mb-6">
               {parks.map((park) => (
                 <div
                   key={park.id}
                   onClick={() => navigate(`/park/${park.id}`)}
-                  className="rounded-2xl overflow-hidden bg-[rgb(var(--card))] border border-[rgb(var(--border))] shadow transition hover:shadow-md cursor-pointer"
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => {
@@ -99,29 +98,30 @@ const RegionalParks: React.FC = () => {
                       navigate(`/park/${park.id}`);
                     }
                   }}
+                  className="snap-start relative w-[280px] md:w-[320px] aspect-[9/16] rounded-3xl overflow-hidden cursor-pointer border border-[rgb(var(--border))] bg-[rgb(var(--card))] shadow transition-transform duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-[rgb(var(--cta))] hover:scale-[1.03] flex-shrink-0"
                 >
                   {park.images[0] && (
                     <img
                       src={park.images[0].url}
-                      alt={park.images[0].altText}
-                      className="h-48 w-full object-cover"
+                      alt={park.images[0].altText || park.fullName}
                       loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover"
                     />
                   )}
-                  <div className="p-4">
-                    <h3 className="text-xl font-semibold mb-1">
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70" />
+
+                  <div className="absolute bottom-5 left-5 right-5 text-white drop-shadow-lg">
+                    <h3 className="text-lg font-semibold leading-tight">
                       {park.fullName}
                     </h3>
-                    <p className="text-sm text-[rgb(var(--copy-secondary))]">
-                      {park.description.slice(0, 110)}...
-                    </p>
                   </div>
                 </div>
               ))}
             </div>
 
             {/* Pagination */}
-            <div className="flex justify-center gap-4">
+            {/* <div className="flex justify-center gap-4">
               <button
                 disabled={start === 0}
                 onClick={handlePrev}
@@ -135,7 +135,7 @@ const RegionalParks: React.FC = () => {
               >
                 Next
               </button>
-            </div>
+            </div> */}
           </>
         )}
       </div>

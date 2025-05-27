@@ -82,7 +82,6 @@ const NationalParks: React.FC = () => {
     <div
       key={park.id}
       onClick={() => navigate(`/park/${park.id}`)}
-      className="rounded-2xl overflow-hidden bg-[rgb(var(--card))] border border-[rgb(var(--border))] shadow transition hover:shadow-md cursor-pointer"
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
@@ -90,22 +89,21 @@ const NationalParks: React.FC = () => {
           navigate(`/park/${park.id}`);
         }
       }}
+      className="relative w-[280px] md:w-[320px] aspect-[9/16] rounded-3xl overflow-hidden cursor-pointer border border-[rgb(var(--border))] bg-[rgb(var(--card))] shadow transition-transform duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-[rgb(var(--cta))] hover:scale-[1.03]"
     >
       {park.images[0] && (
         <img
           src={park.images[0].url}
-          alt={park.images[0].altText}
+          alt={park.images[0].altText || park.fullName}
           loading="lazy"
-          className="h-48 w-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover"
         />
       )}
-      <div className="p-4">
-        <h3 className="text-xl font-semibold mb-1 text-[rgb(var(--copy-primary))]">
-          {park.fullName}
-        </h3>
-        <p className="text-sm text-[rgb(var(--copy-secondary))]">
-          {park.description.slice(0, 110)}...
-        </p>
+
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-transparent opacity-70" />
+
+      <div className="absolute top-5 left-5 right-5 text-white drop-shadow-lg">
+        <h3 className="text-lg font-semibold leading-tight">{park.fullName}</h3>
       </div>
     </div>
   );
@@ -113,7 +111,7 @@ const NationalParks: React.FC = () => {
   return (
     <>
       <div className="p-6 bg-[rgb(var(--background))]">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-(var--cta-text) drop-shadow-lg">
             Parks Explorer
           </h2>
@@ -145,9 +143,13 @@ const NationalParks: React.FC = () => {
                 {searchResults.length > 0 ? "Search Results" : "Popular Parks"}
               </h2>
 
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide py-4 px-2">
                 {(searchResults.length > 0 ? visibleResults : popularParks).map(
-                  renderParkCard
+                  (park) => (
+                    <div key={park.id} className="snap-start">
+                      {renderParkCard(park)}
+                    </div>
+                  )
                 )}
               </div>
 
