@@ -10,57 +10,99 @@ import {
 
 const AboutPage: React.FC = () => {
   return (
-    <section className="min-h-screen bg-[rgb(var(--background))] text-[rgb(var(--copy-primary))] flex flex-col justify-center px-6 py-12">
-      <div className="max-w-5xl mx-auto space-y-20">
-        <header className="space-y-4 text-center">
-          <h1 className="text-5xl font-extrabold tracking-tight">
+    <section
+      className="
+        min-h-screen
+        bg-[rgba(var(--background))]
+        text-[rgba(var(--copy-primary))]
+        flex flex-col justify-center
+        px-8 py-20 sm:px-16 lg:px-32
+      "
+    >
+      <div className="max-w-5xl mx-auto space-y-28">
+        {/* Header */}
+        <header className="space-y-6 text-center max-w-3xl mx-auto">
+          <h1 className="text-6xl font-semibold leading-tight tracking-tight">
             About This Project
           </h1>
-          <p className="text-xl text-[rgb(var(--copy-secondary))] max-w-2xl mx-auto">
+          <p
+            className="text-xl leading-relaxed"
+            style={{ color: "rgba(var(--copy-secondary))" }}
+          >
             Your personal gateway to discovering, exploring, and planning visits
-            to America's most breathtaking national parks.
+            to America’s most breathtaking national parks.
           </p>
         </header>
 
-        <section className="space-y-6">
-          <h2 className="text-3xl font-bold border-b pb-2 border-[rgb(var(--border))]">
+        {/* What You Can Do */}
+        <section className="space-y-8 max-w-4xl mx-auto">
+          <h2
+            className="text-3xl font-semibold border-b pb-3"
+            style={{ borderColor: "rgba(var(--border))" }}
+          >
             What You Can Do
           </h2>
-          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[rgb(var(--copy-secondary))] text-lg">
-            <li className="flex items-start gap-3">
-              <Mountain className="text-[rgb(var(--cta))]" size={24} />
-              Search for parks by name or state
-            </li>
-            <li className="flex items-start gap-3">
-              <Map className="text-[rgb(var(--cta))]" size={24} />
-              Build and customize your own itinerary
-            </li>
-            <li className="flex items-start gap-3">
-              <CalendarCheck className="text-[rgb(var(--cta))]" size={24} />
-              Set visit dates for each park
-            </li>
-            <li className="flex items-start gap-3">
-              <AlertTriangle className="text-[rgb(var(--cta))]" size={24} />
-              View real-time alerts and park conditions
-            </li>
-            <li className="flex items-start gap-3">
-              <Save className="text-[rgb(var(--cta))]" size={24} />
-              Save your trip for later access
-            </li>
+          <ul
+            className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-12"
+            style={{ color: "rgba(var(--copy-secondary))" }}
+          >
+            {[
+              {
+                icon: <Mountain size={24} />,
+                text: "Search for parks by name or state",
+              },
+              {
+                icon: <Map size={24} />,
+                text: "Build and customize your own itinerary",
+              },
+              {
+                icon: <CalendarCheck size={24} />,
+                text: "Set visit dates for each park",
+              },
+              {
+                icon: <AlertTriangle size={24} />,
+                text: "View real-time alerts and park conditions",
+              },
+              {
+                icon: <Save size={24} />,
+                text: "Save your trip for later access",
+              },
+            ].map(({ icon, text }, i) => (
+              <li key={i} className="flex items-center gap-4">
+                <div
+                  className="flex items-center justify-center w-10 h-10 rounded-full"
+                  style={{
+                    backgroundColor: "rgba(var(--cta))",
+                    color: "rgba(var(--cta-text))",
+                  }}
+                >
+                  {icon}
+                </div>
+                <span>{text}</span>
+              </li>
+            ))}
           </ul>
         </section>
 
-        <section className="space-y-6">
-          <h2 className="text-3xl font-bold border-b pb-2 border-[rgb(var(--border))]">
+        {/* Data & Attribution */}
+        <section className="max-w-4xl mx-auto space-y-4">
+          <h2
+            className="text-3xl font-semibold border-b pb-3"
+            style={{ borderColor: "rgba(var(--border))" }}
+          >
             Data & Attribution
           </h2>
-          <p className="text-lg text-[rgb(var(--copy-secondary))] leading-relaxed">
+          <p
+            className="text-lg leading-relaxed"
+            style={{ color: "rgba(var(--copy-secondary))" }}
+          >
             This project uses data from the{" "}
             <a
               href="https://www.nps.gov/subjects/developer/index.htm"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[rgb(var(--cta))] hover:underline font-semibold"
+              className="font-semibold hover:underline"
+              style={{ color: "rgba(var(--cta))" }}
             >
               National Park Service (NPS) API
             </a>
@@ -72,15 +114,28 @@ const AboutPage: React.FC = () => {
           </p>
         </section>
 
-        <section className="space-y-6">
-          <h2 className="text-3xl font-bold border-b pb-2 border-[rgb(var(--border))]">
+        {/* Privacy Policy */}
+        <section className="max-w-4xl mx-auto space-y-6">
+          <h2
+            className="text-3xl font-semibold border-b pb-3"
+            style={{ borderColor: "rgba(var(--border))" }}
+          >
             Privacy Policy
           </h2>
-          <div className="flex items-start gap-4">
-            <div className="flex-shrink-0 bg-[rgb(var(--cta))] text-[rgb(var(--cta-text))] p-3 rounded-full">
-              <ShieldCheck className="w-6 h-6" />
+          <div className="flex gap-6">
+            <div
+              className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full"
+              style={{
+                backgroundColor: "rgba(var(--cta))",
+                color: "rgba(var(--cta-text))",
+              }}
+            >
+              <ShieldCheck size={24} />
             </div>
-            <div className="text-[rgb(var(--copy-secondary))] text-lg leading-relaxed space-y-4">
+            <div
+              className="text-lg leading-relaxed space-y-4"
+              style={{ color: "rgba(var(--copy-secondary))" }}
+            >
               <p>
                 We request access to your device’s location only to calculate
                 distances from your starting point to each park. Your location
@@ -90,8 +145,13 @@ const AboutPage: React.FC = () => {
               <p>
                 Your selected start location (either via geolocation or manual
                 city entry) and any trip itinerary data are stored locally in{" "}
-                {""}
-                <code className="px-3 py-1 bg-[rgb(var(--border))] text-[rgb(var(--copy-secondary))] rounded-xl">
+                <code
+                  className="px-2 py-1 rounded-lg font-mono text-sm"
+                  style={{
+                    backgroundColor: "rgba(var(--border))",
+                    color: "rgba(var(--copy-secondary))",
+                  }}
+                >
                   localStorage
                 </code>{" "}
                 and are not shared externally.

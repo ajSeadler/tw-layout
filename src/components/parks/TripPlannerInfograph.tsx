@@ -6,7 +6,7 @@ const TripPlannerInfograph: React.FC = () => {
     {
       icon: (
         <MapPin
-          className="w-10 h-10 text-[rgb(var(--cta))]"
+          className="w-12 h-12 text-[rgb(var(--cta))]"
           aria-hidden="true"
         />
       ),
@@ -17,7 +17,7 @@ const TripPlannerInfograph: React.FC = () => {
     {
       icon: (
         <Calendar
-          className="w-10 h-10 text-[rgb(var(--cta))]"
+          className="w-12 h-12 text-[rgb(var(--cta))]"
           aria-hidden="true"
         />
       ),
@@ -28,7 +28,7 @@ const TripPlannerInfograph: React.FC = () => {
     {
       icon: (
         <ClipboardCheck
-          className="w-10 h-10 text-[rgb(var(--cta))]"
+          className="w-12 h-12 text-[rgb(var(--cta))]"
           aria-hidden="true"
         />
       ),
@@ -39,30 +39,29 @@ const TripPlannerInfograph: React.FC = () => {
   ];
 
   return (
-    <section className="bg-[rgb(var(--background))] text-[rgb(var(--copy-primary))] py-20 px-6">
-      <div className="max-w-5xl mx-auto text-center mb-12">
-        <h2 className="text-4xl font-extrabold tracking-tight">
+    <section className="bg-[rgb(var(--background))] text-[rgb(var(--copy-primary))] py-24 px-6 sm:px-12 lg:px-24">
+      <div className="max-w-6xl mx-auto text-center mb-16">
+        <h2 className="text-5xl font-semibold tracking-tight leading-tight">
           Plan Your Trip in 3 Easy Steps
         </h2>
-        <p className="mt-3 text-lg text-[rgb(var(--copy-secondary))]">
+        <p className="mt-4 text-lg text-[rgb(var(--copy-secondary))] max-w-3xl mx-auto">
           A sleek, modern workflow to design your perfect national park
           adventure.
         </p>
       </div>
-      <div className="max-w-5xl mx-auto grid gap-8 sm:grid-cols-3">
+
+      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-y-16 gap-x-16">
         {steps.map((step, idx) => (
           <div
             key={idx}
-            className="flex flex-col items-center text-center p-8 bg-[rgb(var(--card))] border border-[rgb(var(--border))] rounded-2xl transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg"
+            className="flex flex-col items-center text-center max-w-xs mx-auto"
           >
-            <div className="flex items-center justify-center w-16 h-16 mb-5 bg-[rgb(var(--cta))]/10 rounded-full">
-              {step.icon}
+            <div className="flex items-center justify-center w-16 h-16 mb-6 rounded-full bg-[rgb(var(--cta))] text-white font-bold text-lg select-none">
+              {idx + 1}
             </div>
-            <h3 className="text-2xl font-semibold mb-3">
-              <span className="text-[rgb(var(--cta))] mr-2">{idx + 1}.</span>
-              {step.title}
-            </h3>
-            <p className="text-[rgb(var(--copy-secondary))] leading-relaxed">
+            <div className="mb-6">{step.icon}</div>
+            <h3 className="text-2xl font-semibold mb-3">{step.title}</h3>
+            <p className="text-[rgb(var(--copy-secondary))] leading-relaxed text-base">
               {step.description}
             </p>
           </div>

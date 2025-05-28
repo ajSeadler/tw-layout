@@ -1,8 +1,9 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../LoadingSpinner";
 import type { Park } from "../../types";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const API_KEY = "5H2kKAyTFXd4yA6xZOSJgLbS6ocDzs8a1j37kQU1";
 const perPage = 6;
@@ -83,12 +84,19 @@ const NationalParks: React.FC = () => {
     setPage(0);
   };
 
-  const handlePaginate = (direction: "prev" | "next") => {
-    setPage((prev) =>
-      direction === "next"
-        ? Math.min(prev + 1, Math.floor((searchResults?.length || 0) / perPage))
-        : Math.max(prev - 1, 0)
-    );
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Approximate card width + gap in px (280 + 16 gap + some buffer)
+  const cardScrollWidth = 296;
+
+  const scrollByCard = (direction: "prev" | "next") => {
+    if (!scrollContainerRef.current) return;
+    const scrollAmount =
+      direction === "next" ? cardScrollWidth : -cardScrollWidth;
+    scrollContainerRef.current.scrollBy({
+      left: scrollAmount,
+      behavior: "smooth",
+    });
   };
 
   const renderParkCard = (park: Park) => (
@@ -149,11 +157,51 @@ const NationalParks: React.FC = () => {
           </div>
         ) : (
           <>
-            <h2 className="text-2xl font-semibold text-[rgb(var(--copy-primary))] mb-3">
-              {hasSearchResults ? "Search Results" : "Popular Parks"}
-            </h2>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-2xl font-semibold text-[rgb(var(--copy-primary))]">
+                {hasSearchResults ? "Search Results" : "Popular Parks"}
+              </h2>
 
-            <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide py-4 px-2">
+              <div className="flex gap-2">
+                <button
+                  onClick={() => scrollByCard("prev")}
+                  aria-label="Scroll Left"
+                  className="
+      flex items-center justify-center
+      w-10 h-10 rounded-full
+      bg-white shadow-md
+      hover:bg-gray-100
+      active:bg-gray-200
+      transition-colors duration-200
+      text-gray-700
+      focus:outline-none focus:ring-2 focus:ring-gray-400
+    "
+                >
+                  <ArrowLeft size={20} />
+                </button>
+                <button
+                  onClick={() => scrollByCard("next")}
+                  aria-label="Scroll Right"
+                  className="
+      flex items-center justify-center
+      w-10 h-10 rounded-full
+      bg-white shadow-md
+      hover:bg-gray-100
+      active:bg-gray-200
+      transition-colors duration-200
+      text-gray-700
+      focus:outline-none focus:ring-2 focus:ring-gray-400
+    "
+                >
+                  <ArrowRight size={20} />
+                </button>
+              </div>
+            </div>
+
+            <div
+              ref={scrollContainerRef}
+              className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide py-4 px-2"
+            >
               {parksToShow.map((park) => (
                 <div key={park.id} className="snap-start">
                   {renderParkCard(park)}
@@ -164,14 +212,21 @@ const NationalParks: React.FC = () => {
             {hasSearchResults && searchResults!.length > perPage && (
               <div className="flex justify-center gap-4 mt-6">
                 <button
-                  onClick={() => handlePaginate("prev")}
+                  onClick={() => setPage((p) => Math.max(p - 1, 0))}
                   disabled={page === 0}
                   className="px-4 py-2 rounded-lg bg-[rgb(var(--card))] border border-[rgb(var(--border))] text-[rgb(var(--copy-secondary))] hover:bg-[rgb(var(--border))] disabled:opacity-50"
                 >
                   Previous
                 </button>
                 <button
-                  onClick={() => handlePaginate("next")}
+                  onClick={() =>
+                    setPage((p) =>
+                      Math.min(
+                        p + 1,
+                        Math.floor(searchResults!.length / perPage)
+                      )
+                    )
+                  }
                   disabled={page >= Math.floor(searchResults!.length / perPage)}
                   className="px-4 py-2 rounded-lg bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))]"
                 >

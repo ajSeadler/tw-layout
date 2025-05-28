@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft, ArrowRight } from "lucide-react"; // make sure lucide-react is installed
 import LoadingSpinner from "../LoadingSpinner";
 import type { Park } from "../../types";
 
@@ -40,6 +41,7 @@ const fetchRegionParks = async (regionKey: string): Promise<Park[]> => {
 const RegionalParks: React.FC = () => {
   const [region, setRegion] = useState("West");
   const navigate = useNavigate();
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const {
     data: parks = [],
@@ -48,13 +50,64 @@ const RegionalParks: React.FC = () => {
   } = useQuery({
     queryKey: ["regionParks", region],
     queryFn: () => fetchRegionParks(region),
-    staleTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 60 * 10,
   });
+
+  // Card width + gap must match CSS for scroll amount
+  const cardWidth = 320; // md:w-[320px]
+  const cardGap = 16; // gap-4 = 1rem = 16px
+
+  const scrollByCard = (direction: "prev" | "next") => {
+    if (!scrollRef.current) return;
+    const scrollAmount = cardWidth + cardGap;
+    scrollRef.current.scrollBy({
+      left: direction === "next" ? scrollAmount : -scrollAmount,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <section className="bg-[rgb(var(--background))] text-[rgb(var(--copy-primary))] px-6 mb-10">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold mb-6">Explore by Region</h2>
+        {/* Header + arrows */}
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-3xl font-bold">Explore by Region</h2>
+
+          <div className="flex gap-2">
+            <button
+              onClick={() => scrollByCard("prev")}
+              aria-label="Scroll Left"
+              className="
+                flex items-center justify-center
+                w-10 h-10 rounded-full
+                bg-white shadow-md
+                hover:bg-gray-100
+                active:bg-gray-200
+                transition-colors duration-200
+                text-gray-700
+                focus:outline-none focus:ring-2 focus:ring-gray-400
+              "
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <button
+              onClick={() => scrollByCard("next")}
+              aria-label="Scroll Right"
+              className="
+                flex items-center justify-center
+                w-10 h-10 rounded-full
+                bg-white shadow-md
+                hover:bg-gray-100
+                active:bg-gray-200
+                transition-colors duration-200
+                text-gray-700
+                focus:outline-none focus:ring-2 focus:ring-gray-400
+              "
+            >
+              <ArrowRight size={20} />
+            </button>
+          </div>
+        </div>
 
         {/* Region Tabs */}
         <div className="flex flex-wrap gap-3 mb-6">
@@ -83,7 +136,10 @@ const RegionalParks: React.FC = () => {
             Failed to load parks. Please try again later.
           </div>
         ) : (
-          <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide py-4 px-2 mb-6">
+          <div
+            ref={scrollRef}
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide py-4 px-2 mb-6"
+          >
             {parks.map((park) => (
               <div
                 key={park.id}

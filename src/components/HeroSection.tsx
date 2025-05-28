@@ -17,101 +17,94 @@ const HeroSection = () => {
 
   return (
     <section
-      className="
-        flex flex-col sm:flex-row
-        justify-center items-center
-        overflow-hidden
-        bg-[rgba(var(--background))]
-        min-h-[calc(100vh-4rem)]
-        px-4 sm:px-6 lg:px-12 py-12
-      "
+      aria-label="Hero section"
+      className="relative min-h-[720px] bg-[rgb(var(--background))] text-[rgb(var(--copy-primary))] overflow-hidden flex flex-col justify-center px-6 sm:px-12 lg:px-24 py-24"
     >
-      {/* Fixed background gradients */}
-      <div className="fixed top-[-8rem] left-[-8rem] w-72 h-72 bg-gradient-to-r from-emerald-300 to-teal-500 opacity-30 rounded-full filter blur-3xl pointer-events-none" />
-      <div className="fixed bottom-[-8rem] right-[-8rem] w-72 h-72 bg-gradient-to-l from-cyan-300 to-blue-500 opacity-30 rounded-full filter blur-3xl pointer-events-none" />
-
-      {/* Text block */}
-      <motion.div
-        className="z-10 max-w-md w-full space-y-4 text-center sm:text-left"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold leading-tight tracking-tight text-[rgba(var(--copy-primary))]">
-          Explore America’s National Treasures
-        </h1>
-        <p className="text-base sm:text-lg text-[rgba(var(--copy-secondary))]">
-          Plan your next adventure to one of the United States’ iconic national
-          parks. Discover landscapes, history, and experiences that will inspire
-          your journey.
-        </p>
-        <div className="flex flex-col sm:flex-row justify-center sm:justify-start gap-3 pt-2">
-          <Link
-            to="/planner"
-            className="
-              inline-block rounded-2xl px-5 py-2 text-sm sm:text-base font-medium
-              bg-[rgb(var(--cta))] text-[rgb(var(--cta-text))]
-              transition hover:shadow-lg hover:bg-[rgb(var(--cta-active))]
-              focus:outline-none focus:ring-4 focus:ring-[rgba(var(--cta),0.4)]
-            "
-          >
-            Start Planning
-          </Link>
-          <Link
-            to="/parks"
-            className="
-              inline-block rounded-2xl px-5 py-2 text-sm sm:text-base font-medium
-              border border-[rgba(var(--border))]
-              text-[rgba(var(--copy-primary))] bg-[rgba(var(--background),0.8)]
-              transition hover:bg-[rgba(var(--card),0.1)]
-              focus:outline-none focus:ring-4 focus:ring-[rgba(var(--border),0.4)]
-            "
-          >
-            Browse Parks
-          </Link>
-        </div>
-      </motion.div>
-
-      {/* Featured Park Card */}
-      <motion.div
-        className="z-10 mt-8 sm:mt-0 sm:ml-8 max-w-sm w-full group"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      >
-        <Link
-          to={`/park/${park.parkCode}`}
-          className="
-            block rounded-3xl overflow-hidden
-            shadow-lg backdrop-blur-md
-            bg-[rgba(var(--card),0.7)]
-            border border-[rgba(var(--border))]
-            transition-transform transform-gpu
-            group-hover:scale-[1.03]
-          "
+      <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-y-10 lg:gap-x-16 items-center">
+        {/* Left text content */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="lg:col-span-7 max-w-3xl mx-auto lg:mx-0 text-center lg:text-left"
         >
-          <div className="relative w-full h-48 sm:h-56 lg:h-64">
-            <img
-              src={park.images[0].url}
-              alt={park.images[0].altText}
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent" />
+          <h1 className="font-bold text-[3.5rem] sm:text-[4.5rem] leading-[1.1] tracking-tight mb-6">
+            Explore America’s National Treasures
+          </h1>
+          <p className="text-xl sm:text-2xl text-[rgb(var(--copy-secondary))] max-w-lg mb-8 leading-relaxed">
+            Plan your next adventure to one of the United States’ iconic
+            national parks. Discover landscapes, history, and experiences that
+            will inspire your journey.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <Link
+              to="/planner"
+              className="
+                inline-block
+                rounded-3xl
+                bg-[rgb(var(--cta))]
+                px-8 py-3
+                text-lg font-semibold
+                text-[rgb(var(--cta-text))]
+                shadow-md
+                hover:shadow-xl hover:bg-[rgb(var(--cta-active))]
+                transition
+                focus:outline-none focus:ring-4 focus:ring-[rgba(var(--cta),0.4)]
+              "
+            >
+              Start Planning
+            </Link>
+            <Link
+              to="/parks"
+              className="
+                inline-block
+                rounded-3xl
+                border border-[rgb(var(--border))]
+                px-8 py-3
+                text-lg font-semibold
+                text-[rgb(var(--copy-primary))]
+                bg-[rgba(var(--background),0.8)]
+                hover:bg-[rgba(var(--card),0.1)]
+                transition
+                focus:outline-none focus:ring-4 focus:ring-[rgba(var(--border),0.4)]
+              "
+            >
+              Browse Parks
+            </Link>
           </div>
-          <div className="p-4 sm:p-6 space-y-1">
-            <div className="text-xs uppercase tracking-wide text-[rgba(var(--copy-secondary))]">
-              Featured Park
+        </motion.div>
+
+        {/* Right featured card */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="lg:col-span-5 mx-auto w-full max-w-sm rounded-3xl border border-[rgba(var(--border))] bg-[rgba(var(--card),0.8)] shadow-2xl backdrop-blur-md overflow-hidden hover:scale-[1.03] transition-transform cursor-pointer"
+        >
+          <Link to={`/park/${park.parkCode}`} className="block group">
+            <div className="relative h-72 sm:h-80 lg:h-96 overflow-hidden">
+              <img
+                src={park.images[0].url}
+                alt={park.images[0].altText}
+                loading="lazy"
+                className="w-full h-full object-cover transition-transform group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
             </div>
-            <h3 className="text-xl sm:text-2xl font-semibold text-[rgba(var(--copy-primary))]">
-              {park.fullName}
-            </h3>
-            <p className="text-sm text-[rgba(var(--copy-secondary))] line-clamp-3">
-              {park.description}
-            </p>
-          </div>
-        </Link>
-      </motion.div>
+            <div className="p-6">
+              <p className="text-xs uppercase tracking-widest text-[rgba(var(--copy-secondary))] mb-2">
+                Featured Park
+              </p>
+              <h2 className="text-2xl font-bold text-[rgb(var(--copy-primary))] mb-2">
+                {park.fullName}
+              </h2>
+              <p className="text-[rgba(var(--copy-secondary))] line-clamp-3 leading-relaxed">
+                {park.description}
+              </p>
+            </div>
+          </Link>
+        </motion.div>
+      </div>
     </section>
   );
 };

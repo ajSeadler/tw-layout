@@ -13,11 +13,11 @@ const Navbar: React.FC = () => {
 
   const links = [
     { name: "Home", path: "/" },
-    { name: "Parks", path: "/parks" },
-    { name: "Plan Visit", path: "/planner" },
     { name: "About", path: "/about" },
-    { name: "My Trip", path: "/summary" },
+    { name: "Parks", path: "/parks" },
     { name: "Alerts", path: "/alerts" },
+    { name: "Plan Visit", path: "/planner" },
+    { name: "My Trip", path: "/summary" },
   ];
 
   useEffect(() => {
