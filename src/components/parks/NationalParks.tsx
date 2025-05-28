@@ -120,7 +120,7 @@ const NationalParks: React.FC = () => {
       )}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-transparent opacity-70" />
       <div className="absolute top-5 left-5 right-5 text-white drop-shadow-lg">
-        <h3 className="text-md font-semibold leading-tight uppercase">
+        <h3 className="text-md font-bold leading-tight uppercase">
           {park.fullName}
         </h3>
       </div>

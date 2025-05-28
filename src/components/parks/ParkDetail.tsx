@@ -14,7 +14,6 @@ import { ParkImageCarousel } from "./ParkImagesCarousel";
 
 const API_KEY = "5H2kKAyTFXd4yA6xZOSJgLbS6ocDzs8a1j37kQU1";
 
-// Fetch function explicitly typed to return Park
 const fetchParkById = async (id: string): Promise<Park> => {
   const res = await fetch(
     `https://developer.nps.gov/api/v1/parks?id=${id}&api_key=${API_KEY}`
@@ -26,7 +25,9 @@ const fetchParkById = async (id: string): Promise<Park> => {
 
 const ParkDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [scrollProgress, setScrollProgress] = useState(0); // 0 (top) to 1 (scrolled)
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const {
     data: park,
@@ -46,20 +47,14 @@ const ParkDetail: React.FC = () => {
   });
 
   useEffect(() => {
-    const maxScroll = 100; // px over which transition happens
-
+    const maxScroll = 120;
     const onScroll = () => {
-      const currentScroll = window.scrollY;
-      const progress = Math.min(currentScroll / maxScroll, 1);
-      setScrollProgress(progress);
+      const scrollY = window.scrollY;
+      setScrollProgress(Math.min(scrollY / maxScroll, 1));
     };
-
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  const [showToast, setShowToast] = React.useState(false);
-  const [toastMessage, setToastMessage] = React.useState("");
 
   const triggerToast = (message: string) => {
     setToastMessage(message);
@@ -100,194 +95,192 @@ const ParkDetail: React.FC = () => {
 
   if (isError || !park) {
     return (
-      <div className="p-8 text-center text-red-500 font-semibold">
+      <div className="p-8 text-center text-red-600 font-semibold text-lg">
         Park not found.
       </div>
     );
   }
 
-  // Calculate dynamic height for header (interpolating between 90vh and 50px)
-  const maxHeightPx = window.innerHeight * 0.9;
-  const minHeightPx = 50;
-  const containerHeight =
-    maxHeightPx - scrollProgress * (maxHeightPx - minHeightPx);
+  // Hero shrink effect for height and text scaling
+  const maxHeroHeight = 480;
+  const minHeroHeight = 96;
+  const heroHeight =
+    maxHeroHeight - scrollProgress * (maxHeroHeight - minHeroHeight);
 
-  // Interpolating font size classes (just 2 states for simplicity)
-  const titleClass =
-    scrollProgress > 0.5
-      ? "text-sm sm:text-sm font-extrabold"
-      : "text-3xl sm:text-4xl font-semibold";
-
-  // Overlay opacity from 0.3 (no scroll) to 0.7 (scrolled)
-  const overlayOpacity = 0.3 + scrollProgress * 0.4;
+  const titleScale = 1 - scrollProgress * 0.5; // scale from 1 to 0.5
+  const titleOpacity = 1 - scrollProgress * 0.7;
 
   return (
-    <div className="bg-[rgb(var(--background))] min-h-screen text-[rgb(var(--copy-primary))] relative">
-      {/* Hero Image + Header Overlay with smooth shrinking and overlay */}
-      <div
-        className="w-full sticky top-0 z-20 overflow-hidden"
+    <main className="bg-[rgb(var(--background))] text-[rgb(var(--copy-primary))] min-h-screen relative">
+      {/* Hero Section */}
+      <section
+        className="relative w-full top-0 z-30 flex items-end overflow-hidden"
         style={{
-          height: `${containerHeight}px`,
-          transition: "height 0.3s ease-in-out",
+          height: heroHeight,
+          transition: "height 0.3s ease",
         }}
+        aria-label={`Hero image and title for ${park.fullName}`}
       >
         {park.images?.[0]?.url && (
           <img
             src={park.images[0].url}
-            alt={park.images[0].altText || "Park Image"}
-            className="w-full h-full object-cover object-center"
-            style={{
-              transition: "filter 0.3s ease-in-out",
-              filter: `brightness(${1 - overlayOpacity})`,
-            }}
+            alt={park.images[0].altText || `${park.fullName} main view`}
+            className="absolute inset-0 w-full h-full object-cover object-center  transition-filter duration-300"
             loading="eager"
             decoding="async"
           />
         )}
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-transparent opacity-70" />
 
-        {/* Overlay for text readability */}
+        {/* Title & Location */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="relative z-10 p-6 sm:p-10 max-w-5xl mx-auto w-full text-center"
           style={{
-            background: `linear-gradient(to bottom, rgba(0,0,0,${overlayOpacity}) 0%, rgba(0,0,0,0) 60%)`,
-            transition: "background 0.3s ease-in-out",
-          }}
-        />
-
-        {/* Park Name */}
-        <div
-          className={`absolute bottom-4 left-6 sm:left-12 text-white drop-shadow-lg transition-all duration-300 ease-in-out ${titleClass}`}
-          style={{
-            padding: "0.25rem 0.5rem",
-            borderRadius: "0.5rem",
+            transform: `scale(${titleScale})`,
+            opacity: titleOpacity,
+            transition: "transform 0.3s ease, opacity 0.3s ease",
           }}
         >
-          <h1 className="tracking-tight leading-tight">{park.fullName}</h1>
-        </div>
-      </div>
-
-      {/* Main Content with dynamic paddingTop */}
-      <div
-        className="max-w-6xl mx-auto px-6 pb-16 space-y-10"
-        style={{ paddingTop: maxHeightPx }}
-      >
-        <section>
-          <h2 className="text-2xl font-semibold mb-2">Overview</h2>
-          <p className="flex items-center gap-2 mb-4">
-            <MapPin className="text-[rgb(var(--cta))]" />
-            {park.states}
+          <h1
+            className="text-white font-extrabold leading-tight tracking-wide drop-shadow-lg select-none"
+            style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)" }}
+          >
+            {park.fullName}
+          </h1>
+          <p
+            className="mt-4 inline-flex items-center gap-2 text-base sm:text-lg font-medium text-white px-3 py-1.5 rounded-full backdrop-blur-md bg-white/10 border border-white/20 shadow-sm transition-all duration-300 select-none"
+            aria-label={`Located in ${park.states}`}
+          >
+            <MapPin className="w-5 h-5 stroke-white/80" strokeWidth={1.8} />
+            <span className="tracking-wide">{park.states}</span>
           </p>
-          <p className="text-lg leading-relaxed text-[rgb(var(--copy-secondary))] mb-6">
+        </div>
+      </section>
+
+      {/* Content Container */}
+      <section className="max-w-6xl mx-auto px-6 sm:px-12 py-10 space-y-12">
+        {/* Description & Weather */}
+        <article>
+          <h2 className="text-3xl font-semibold mb-4 border-b-2 border-[rgb(var(--border))] pb-2">
+            Overview
+          </h2>
+          <p className="text-lg leading-relaxed text-[rgb(var(--copy-secondary))] mb-6 whitespace-pre-line">
             {park.description}
           </p>
           <WeatherCard weather={weather} loading={weatherLoading} />
-        </section>
+        </article>
 
-        <section>
+        {/* Directions */}
+        <article>
           <DirectionsCard
             directionsInfo={park.directionsInfo}
             directionsUrl={park.directionsUrl}
             latitude={park.latitude}
             longitude={park.longitude}
           />
-        </section>
+        </article>
 
-        <ParkImageCarousel images={park.images.slice(0, 4)} />
+        {/* Images Carousel */}
+        <article>
+          <ParkImageCarousel images={park.images.slice(0, 6)} />
+        </article>
 
+        {/* Operating Hours */}
         {park.operatingHours.length > 0 && (
-          <section>
-            <h2 className="text-xl font-semibold mb-2">Operating Hours</h2>
-            <p className="mb-3">{park.operatingHours[0].description}</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm">
+          <article>
+            <h2 className="text-2xl font-semibold mb-4 border-b border-[rgb(var(--border))] pb-2">
+              Operating Hours
+            </h2>
+            <p className="mb-4 text-[rgb(var(--copy-secondary))] leading-relaxed whitespace-pre-line">
+              {park.operatingHours[0].description}
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
               {Object.entries(park.operatingHours[0].standardHours).map(
                 ([day, hours]) => (
                   <div
                     key={day}
-                    className="bg-[rgb(var(--card))] p-3 rounded-xl shadow-sm"
+                    className="bg-[rgb(var(--card))] rounded-lg p-3 shadow-sm select-none"
                   >
                     <strong className="capitalize">{day}:</strong> {hours}
                   </div>
                 )
               )}
             </div>
-          </section>
+          </article>
         )}
 
-        <section>
+        {/* Entrance Fees */}
+        <article>
           <EntranceFeesSection entranceFees={park.entranceFees} />
-        </section>
+        </article>
 
-        <section>
-          <h2 className="text-xl font-semibold mb-2">Activities & Topics</h2>
-          <div className="flex flex-wrap gap-2 text-sm">
+        {/* Activities & Topics */}
+        <article>
+          <h2 className="text-2xl font-semibold mb-4 border-b border-[rgb(var(--border))] pb-2">
+            Activities & Topics
+          </h2>
+          <div className="flex flex-wrap gap-3 text-sm">
             {park.activities.map((a) => (
               <span
                 key={a.id}
-                className="px-3 py-1 bg-[rgb(var(--border))] text-[rgb(var(--copy-secondary))] rounded-xl"
+                className="px-4 py-1 rounded-full bg-[rgb(var(--border))] text-[rgb(var(--copy-secondary))] select-none"
               >
                 {a.name}
               </span>
             ))}
           </div>
-          <div className="flex flex-wrap gap-2 text-sm mt-3">
+          <div className="flex flex-wrap gap-3 text-sm mt-4">
             {park.topics.map((t) => (
               <span
                 key={t.id}
-                className="px-3 py-1 bg-[rgb(var(--border))] text-[rgb(var(--copy-secondary))] rounded-xl"
+                className="px-4 py-1 rounded-full bg-[rgb(var(--border))] text-[rgb(var(--copy-secondary))] select-none"
               >
                 {t.name}
               </span>
             ))}
           </div>
-        </section>
+        </article>
 
+        {/* Weather Info */}
         {park.weatherInfo && (
-          <section>
-            <h2 className="text-xl font-semibold mb-2">Weather Info</h2>
-            <p className="text-[rgb(var(--copy-secondary))]">
+          <article>
+            <h2 className="text-2xl font-semibold mb-2 border-b border-[rgb(var(--border))] pb-1">
+              Weather Info
+            </h2>
+            <p className="text-[rgb(var(--copy-secondary))] whitespace-pre-line">
               {park.weatherInfo}
             </p>
-          </section>
+          </article>
         )}
 
-        {park.contacts && (
-          <section>
-            <h2 className="text-xl font-semibold mb-2">Contact</h2>
-            <ul className="text-sm space-y-1">
-              {park.contacts.phoneNumbers.map((p, i) => (
-                <li key={i}>
-                  <strong>{p.type}:</strong> {p.phoneNumber}
-                </li>
-              ))}
-              {park.contacts.emailAddresses.map((e, i) => (
-                <li key={i}>
-                  <strong>Email:</strong> {e.emailAddress}
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+        {/* Save Button */}
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={saveToItinerary}
+            className="rounded-full bg-[rgb(var(--cta))] text-white px-6 py-3 text-lg font-semibold shadow-md hover:bg-[rgb(var(--cta-hover))] transition-colors"
+            aria-label="Save park to trip itinerary"
+          >
+            Save to Itinerary
+          </button>
+        </div>
 
-        <button
-          onClick={saveToItinerary}
-          className="self-start sm:self-auto px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-[rgb(var(--cta))] hover:bg-[rgb(var(--cta-active))] text-[rgb(var(--cta-text))] font-semibold text-sm sm:text-base transition-all shadow-md"
-        >
-          Save to Itinerary
-        </button>
-        <BackButton />
-      </div>
+        {/* Back Button */}
+        <div className="flex justify-center mt-6">
+          <BackButton />
+        </div>
+      </section>
 
-      {/* Toast */}
+      {/* Toast Notification */}
       {showToast && (
         <div
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 px-5 py-3 sm:px-6 sm:py-4 rounded-2xl shadow-xl z-50 bg-[rgb(var(--cta))] text-[rgb(var(--cta-text))] text-sm sm:text-base font-medium backdrop-blur-sm ring-1 ring-[rgb(var(--border))] transition-all duration-300 ease-out"
-          role="status"
-          aria-live="polite"
+          role="alert"
+          aria-live="assertive"
+          className="fixed bottom-8 left-1/2 -translate-x-1/2 rounded-md bg-[rgb(var(--cta))] text-white px-5 py-3 shadow-lg z-50 select-none animate-fadeInOut"
         >
           {toastMessage}
         </div>
       )}
-    </div>
+    </main>
   );
 };
 
