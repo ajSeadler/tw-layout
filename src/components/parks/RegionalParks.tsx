@@ -150,7 +150,7 @@ const RegionalParks: React.FC = () => {
                     navigate(`/park/${park.id}`);
                   }
                 }}
-                className="snap-start relative w-[280px] md:w-[320px] aspect-[9/16] rounded-3xl overflow-hidden cursor-pointer border border-[rgb(var(--border))] bg-[rgb(var(--card))] shadow transition-transform duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-[rgb(var(--cta))] hover:scale-[1.03] flex-shrink-0"
+                className="snap-start relative w-[280px] md:w-[320px] aspect-[9/16] rounded-3xl overflow-hidden cursor-pointer  bg-[rgb(var(--card))] shadow transition-transform duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-[rgb(var(--cta))] hover:scale-[1.03] flex-shrink-0"
               >
                 {park.images?.[0] && (
                   <img

@@ -1,11 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import ThemeSwitcher from "./ThemeSwitcher";
-import { MountainIcon, Menu as MenuIcon, X as XIcon } from "lucide-react";
+import {
+  MountainIcon,
+  Menu as MenuIcon,
+  X as XIcon,
+  TentTree,
+} from "lucide-react";
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
+  const [tripCount, setTripCount] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const menuRef = useRef<HTMLDivElement>(null);
@@ -20,20 +26,21 @@ const Navbar: React.FC = () => {
     { name: "My Trip", path: "/summary" },
   ];
 
+  // Handle navbar show/hide on scroll
   useEffect(() => {
     let lastScrollY = window.scrollY;
     const handleScroll = () => {
-      const current = window.scrollY;
-      setShowNavbar(!(current > lastScrollY && current > 80));
-      lastScrollY = current;
+      setShowNavbar(!(window.scrollY > lastScrollY && window.scrollY > 80));
+      lastScrollY = window.scrollY;
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close menu on Escape or outside click
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && menuOpen) {
+      if (e.key === "Escape") {
         setMenuOpen(false);
         buttonRef.current?.focus();
       }
@@ -56,13 +63,25 @@ const Navbar: React.FC = () => {
     };
   }, [menuOpen]);
 
+  // Prevent background scroll when menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
   }, [menuOpen]);
 
+  // Get trip count from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem("tripItinerary");
+    try {
+      const trips = saved ? JSON.parse(saved) : [];
+      setTripCount(Array.isArray(trips) ? trips.length : 0);
+    } catch {
+      setTripCount(0);
+    }
+  }, []);
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[rgba(var(--card),0.85)]shadow-md transition-transform duration-350 ${
+      className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md transition-transform duration-350 ${
         showNavbar ? "translate-y-0" : "-translate-y-full"
       }`}
     >
@@ -108,15 +127,29 @@ const Navbar: React.FC = () => {
 
         {/* Actions */}
         <div className="flex items-center gap-5">
-          {/* Desktop theme toggle */}
+          {/* Trip Cart */}
+          <Link
+            to="/summary"
+            className="relative group"
+            aria-label="View My Trip"
+          >
+            <TentTree className="w-6 h-6 text-[rgb(var(--copy-primary))] group-hover:text-[rgb(var(--cta-active))] transition-colors duration-300" />
+            {tripCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-[rgb(var(--cta))] text-white text-xs font-bold rounded-full px-1.5 py-0.5 leading-none shadow-md">
+                {tripCount}
+              </span>
+            )}
+          </Link>
+
+          {/* Desktop Theme Toggle */}
           <div className="hidden md:block">
             <ThemeSwitcher />
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile Menu Button */}
           <button
             ref={buttonRef}
-            onClick={() => setMenuOpen((o) => !o)}
+            onClick={() => setMenuOpen((prev) => !prev)}
             aria-label={
               menuOpen ? "Close navigation menu" : "Open navigation menu"
             }
@@ -137,7 +170,7 @@ const Navbar: React.FC = () => {
       <nav
         id="mobile-menu"
         ref={menuRef}
-        className={`md:hidden fixed inset-x-0 top-[64px] bg-[rgba(var(--card),0.95)]  backdrop-blur-sm overflow-hidden transition-max-height duration-500 ease-in-out ${
+        className={`md:hidden fixed inset-x-0 top-[64px] bg-[rgba(var(--card),0.95)] backdrop-blur-sm overflow-hidden transition-max-height duration-500 ease-in-out ${
           menuOpen ? "max-h-screen py-6" : "max-h-0 py-0"
         }`}
       >
@@ -159,7 +192,7 @@ const Navbar: React.FC = () => {
             );
           })}
 
-          {/* Mobile theme toggle */}
+          {/* Mobile Theme Toggle */}
           <div className="pt-6 border-t border-[rgba(var(--border),0.3)]">
             <ThemeSwitcher />
           </div>
