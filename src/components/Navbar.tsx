@@ -10,7 +10,6 @@ import {
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showNavbar, setShowNavbar] = useState(true);
   const [tripCount, setTripCount] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
@@ -25,17 +24,6 @@ const Navbar: React.FC = () => {
     { name: "Plan Visit", path: "/planner" },
     { name: "My Trip", path: "/summary" },
   ];
-
-  // Handle navbar show/hide on scroll
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-    const handleScroll = () => {
-      setShowNavbar(!(window.scrollY > lastScrollY && window.scrollY > 80));
-      lastScrollY = window.scrollY;
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Close menu on Escape or outside click
   useEffect(() => {
@@ -80,11 +68,7 @@ const Navbar: React.FC = () => {
   }, []);
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md transition-transform duration-350 ${
-        showNavbar ? "translate-y-0" : "-translate-y-full"
-      }`}
-    >
+    <header className="bg-[rgba(var(--card),0.95)] backdrop-blur-md border-b border-[rgba(var(--border),0.3)]">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 md:px-12 py-4">
         {/* Logo */}
         <div
@@ -170,7 +154,7 @@ const Navbar: React.FC = () => {
       <nav
         id="mobile-menu"
         ref={menuRef}
-        className={`md:hidden fixed inset-x-0 top-[64px] bg-[rgba(var(--card),0.95)] backdrop-blur-sm overflow-hidden transition-max-height duration-500 ease-in-out ${
+        className={`md:hidden bg-[rgba(var(--card),0.95)] backdrop-blur-sm overflow-hidden transition-max-height duration-500 ease-in-out ${
           menuOpen ? "max-h-screen py-6" : "max-h-0 py-0"
         }`}
       >

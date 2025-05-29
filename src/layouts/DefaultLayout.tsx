@@ -13,7 +13,7 @@ export function DefaultLayout({ children }: Props) {
     >
       <Navbar />
 
-      <main className="flex-1 w-full pt-16">{children}</main>
+      <main className="flex-1 w-full">{children}</main>
 
       <footer className="text-center text-xs py-6 border-t border-[rgb(var(--border))] bg-[rgb(var(--card))] text-[rgb(var(--copy-secondary))]">
         © {new Date().getFullYear()}
