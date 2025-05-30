@@ -54,32 +54,18 @@ const PopularParks: React.FC<PopularParksProps> = ({ onClose }) => {
   });
 
   return (
-    <nav
-      aria-label="Popular Parks"
-      className="flex flex-col bg-[rgba(var(--background))] rounded-xl border border-[rgba(var(--border),0.1)]"
-    >
-      <h3
-        className="font-semibold text-lg mb-4 select-none"
-        style={{ color: `rgb(var(--copy-primary))` }}
-      >
-        Popular Parks
-      </h3>
+    <div className=" ">
+      <h3 className="text-2xl font-semibold mb-6">Popular Parks</h3>
 
-      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[rgba(var(--cta),0.3)] scrollbar-track-transparent">
+      <div className="space-y-3 max-h-[420px] overflow-y-auto scrollbar-thin scrollbar-thumb-[rgba(var(--cta),0.3)] scrollbar-track-transparent">
         {isLoading && (
-          <p
-            className="text-sm italic text-center"
-            style={{ color: `rgb(var(--copy-secondary))` }}
-          >
+          <p className="text-sm italic text-center text-[rgb(var(--copy-secondary))]">
             Loading parks…
           </p>
         )}
 
         {error && (
-          <p
-            className="text-sm font-medium text-center"
-            style={{ color: `rgb(var(--cta))` }}
-          >
+          <p className="text-sm font-medium text-center text-[rgb(var(--cta))]">
             Error: {error.message}
           </p>
         )}
@@ -89,10 +75,10 @@ const PopularParks: React.FC<PopularParksProps> = ({ onClose }) => {
             key={park.id}
             to={`/park/${park.id}`}
             onClick={onClose}
-            className="group flex items-center gap-3 mb-2 last:mb-0 rounded-lg border border-[rgba(var(--border),0.15)] bg-[rgba(var(--card))] px-2 py-1.5 transition-shadow duration-200 hover:shadow-md hover:shadow-[rgba(var(--cta),0.25)]"
+            className="group flex gap-4 items-center rounded-xl bg-[rgb(var(--background))] border border-[rgba(var(--border),0.12)] px-3 py-3 transition hover:shadow-md hover:shadow-[rgba(var(--cta),0.2)]"
             aria-label={`View details for ${park.fullName}`}
           >
-            <div className="flex-shrink-0 w-10 h-10 rounded-md overflow-hidden bg-[rgba(var(--border),0.1)] shadow-sm">
+            <div className="w-14 h-14 flex-shrink-0 rounded-lg overflow-hidden bg-[rgba(var(--border),0.08)] shadow-sm">
               {park.images?.[0]?.url ? (
                 <img
                   src={park.images[0].url}
@@ -108,23 +94,18 @@ const PopularParks: React.FC<PopularParksProps> = ({ onClose }) => {
               )}
             </div>
 
-            <div className="flex flex-col overflow-hidden">
-              <h4
-                className="text-xs font-semibold truncate leading-tight"
-                style={{ color: `rgb(var(--copy-primary))` }}
-              >
+            <div className="overflow-hidden">
+              <h4 className="text-sm font-semibold truncate text-[rgb(var(--copy-primary))]">
                 {park.fullName}
               </h4>
               <p
-                className="text-[10px] mt-0.5 truncate leading-none"
-                style={{ color: `rgb(var(--copy-secondary))` }}
+                className="text-xs truncate text-[rgb(var(--copy-secondary))]"
                 title={park.states}
               >
                 {park.states}
               </p>
               <p
-                className="text-[10px] mt-0.5 font-medium uppercase tracking-wide truncate leading-none"
-                style={{ color: `rgb(var(--cta))` }}
+                className="text-[10px] font-medium uppercase tracking-wide text-[rgb(var(--cta))] truncate"
                 title={park.designation}
               >
                 {park.designation}
@@ -133,7 +114,7 @@ const PopularParks: React.FC<PopularParksProps> = ({ onClose }) => {
           </Link>
         ))}
       </div>
-    </nav>
+    </div>
   );
 };
 

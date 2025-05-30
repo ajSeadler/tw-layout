@@ -116,8 +116,8 @@ const ParkDetail: React.FC = () => {
         {/* Sidebar */}
         <aside
           className={`${
-            sidebarOpen ? "w-72" : "w-0"
-          } sm:pt-20 transition-all duration-300 ease-in-out bg-[rgb(var(--background))] border-r border-[rgb(var(--border))] overflow-hidden fixed sm:static z-40 h-full`}
+            sidebarOpen ? "w-96" : "w-0"
+          } sm:pt-20 transition-all duration-300 ease-in-out bg-[rgb(var(--background))]  overflow-hidden fixed sm:static z-40 h-full`}
         >
           <div className="flex items-center justify-between px-4 py-3 border-b border-[rgb(var(--border))] sm:hidden">
             <h3 className="text-lg font-semibold text-[rgb(var(--copy-primary))]">
@@ -143,7 +143,7 @@ const ParkDetail: React.FC = () => {
 
         {/* Toggle Button for Desktop */}
         <div
-          className="hidden sm:flex absolute top-10 h-14 w-14 z-50 bg-[rgb(var(--card))] border border-[rgb(var(--border))] shadow-md rounded-r-full items-center justify-center cursor-pointer hover:bg-[rgb(var(--card-hover))] transition-colors"
+          className="hidden sm:flex absolute top-5 h-14 w-14 z-50 bg-[rgb(var(--card))] border border-[rgb(var(--border))] shadow-md rounded-r-full items-center justify-center cursor-pointer hover:bg-[rgb(var(--card-hover))] transition-colors"
           onClick={() => setSidebarOpen(!sidebarOpen)}
         >
           <button
@@ -151,9 +151,9 @@ const ParkDetail: React.FC = () => {
             className="focus:outline-none"
           >
             {sidebarOpen ? (
-              <PanelLeft className="w-6 h-6 text-[rgb(var(--copy-secondary))]" />
+              <PanelLeft className="w-6 h-6 text-[rgb(var(--cta))]" />
             ) : (
-              <PanelRight className="w-6 h-6 text-[rgb(var(--copy-secondary))]" />
+              <PanelRight className="w-6 h-6 text-[rgb(var(--cta))]" />
             )}
           </button>
         </div>
