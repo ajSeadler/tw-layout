@@ -1,5 +1,8 @@
 import React from "react";
 import { X } from "lucide-react";
+import PopularParks from "./PopularParks"; // <-- import here
+import QuickTips from "./QuickTips";
+import DidYouKnow from "./DidYouKnow";
 
 interface TableOfContentsProps {
   open: boolean;
@@ -17,21 +20,6 @@ const sections = [
 ];
 
 const TableOfContents: React.FC<TableOfContentsProps> = ({ open, onClose }) => {
-  const TOCLinks = (
-    <nav className="space-y-3 text-base font-medium">
-      {sections.map(({ id, label }) => (
-        <a
-          key={id}
-          href={`#${id}`}
-          onClick={onClose} // just call onClose prop here
-          className="block px-3 py-2 rounded-xl hover:bg-[rgb(var(--cta))] hover:text-white transition"
-        >
-          {label}
-        </a>
-      ))}
-    </nav>
-  );
-
   return (
     <>
       {/* Mobile Slide-In TOC */}
@@ -54,9 +42,8 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ open, onClose }) => {
             <a
               key={id}
               href={`#${id}`}
-              onClick={onClose} // call onClose on click
-              className="block px-4 py-2 rounded-xl text-[rgb(var(--copy-primary))]
-                hover:bg-[rgb(var(--cta))] hover:text-white transition"
+              onClick={onClose}
+              className="block px-4 py-2 rounded-xl text-[rgb(var(--copy-primary))] hover:bg-[rgb(var(--cta))] hover:text-white transition"
             >
               {label}
             </a>
@@ -64,11 +51,30 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ open, onClose }) => {
         </nav>
       </div>
 
-      {/* Desktop Sidebar (no toggle needed) */}
-      <div className="hidden sm:block p-6">
-        <h2 className="text-xl font-semibold mb-4">Contents</h2>
-        {TOCLinks}
-      </div>
+      {/* Desktop Sidebar */}
+      <aside className="hidden sm:block p-6 w-[280px] space-y-10">
+        {/* Table of Contents */}
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Contents</h2>
+          <nav className="space-y-3 text-base font-medium">
+            {sections.map(({ id, label }) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                onClick={onClose}
+                className="block px-3 py-2 rounded-xl hover:bg-[rgb(var(--cta))] hover:text-white transition"
+              >
+                {label}
+              </a>
+            ))}
+          </nav>
+        </div>
+
+        {/* Curated Parks */}
+        <PopularParks onClose={onClose} />
+        <QuickTips />
+        <DidYouKnow />
+      </aside>
     </>
   );
 };
