@@ -14,26 +14,23 @@ const DidYouKnow: React.FC = () => {
   return (
     <section
       aria-label="Did You Know"
-      className="bg-[rgba(var(--card))] border border-[rgba(var(--border),0.12)] rounded-xl p-6 max-w-full relative overflow-hidden"
-      style={{
-        boxShadow: "0 2px 6px rgb(var(--border) / 0.08)",
-      }}
+      className="max-w-full relative overflow-hidden pt-5"
     >
       {/* subtle gradient overlay for texture */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[rgba(var(--cta),0.05)] to-transparent rounded-xl"
+        className="pointer-events-none absolute inset-0"
         style={{ zIndex: 0 }}
       />
 
       <div className="relative z-10 flex items-center gap-2 mb-5">
-        <Lightbulb className="w-6 h-6 text-[rgba(var(--cta))]" />
-        <h3
-          className="text-lg font-semibold tracking-wide"
+        <Lightbulb className="w-8 h-8 text-[rgba(var(--cta))]" />
+        <h2
+          className="text-2xl font-semibold tracking-wide"
           style={{ color: `rgb(var(--copy-primary))` }}
         >
           Did You Know?
-        </h3>
+        </h2>
       </div>
 
       <ul

@@ -11,24 +11,37 @@ interface TableOfContentsProps {
 
 const sections = [
   { id: "overview", label: "Overview" },
-  { id: "directions", label: "Directions" },
   { id: "photos", label: "Photos" },
+  { id: "weather-info", label: "Weather Info" },
+
+  { id: "directions", label: "Directions" },
+
   { id: "hours", label: "Operating Hours" },
   { id: "fees", label: "Entrance Fees" },
   { id: "activities", label: "Activities & Topics" },
-  { id: "weather-info", label: "Weather Info" },
 ];
 
 const TableOfContents: React.FC<TableOfContentsProps> = ({ open, onClose }) => {
   return (
     <>
-      {/* Mobile Slide-In TOC */}
+      {/* ✅ Mobile Slide-In Sidebar */}
       <div
-        className={`fixed inset-0 z-50 bg-[rgb(var(--background))] p-6 transition-transform duration-300 ease-in-out sm:hidden shadow-xl ${
-          open ? "translate-x-0" : "translate-x-full"
+        className={`fixed inset-0 z-[99] sm:hidden transition-opacity duration-300 ${
+          open
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0"
         }`}
       >
-        <div className="relative max-w-[420px] w-full h-full mx-auto">
+        <div
+          className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+          onClick={onClose}
+        />
+        <div
+          className={`absolute right-0 top-0 h-full w-[90%] max-w-[420px] bg-[rgb(var(--background))] p-6 shadow-xl transform transition-transform duration-300 ease-in-out ${
+            open ? "translate-x-0" : "translate-x-full"
+          } overflow-y-auto`}
+          style={{ maxHeight: "100vh" }}
+        >
           <button
             onClick={onClose}
             className="absolute top-4 right-4 p-2 rounded-full hover:bg-[rgb(var(--border))]"
@@ -50,11 +63,16 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ open, onClose }) => {
               </a>
             ))}
           </nav>
+          <div className="space-y-6 mt-10">
+            <PopularParks onClose={onClose} />
+            <QuickTips />
+            <DidYouKnow />
+          </div>
         </div>
       </div>
 
-      {/* Desktop Sidebar */}
-      <aside className="hidden sm:flex flex-col p-4 w-auto space-y-10 border-r border-[rgb(var(--border))] bg-[rgb(var(--background))] shadow-sm">
+      {/* ✅ Desktop Sidebar */}
+      <aside className="hidden sm:flex flex-col p-4 w-[280px] space-y-10">
         <div>
           <h2 className="text-2xl font-semibold mb-6">Contents</h2>
           <nav className="space-y-3 text-base font-medium">

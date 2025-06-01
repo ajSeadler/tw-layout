@@ -141,6 +141,19 @@ const ParkDetail: React.FC = () => {
           </div>
         </aside>
 
+        {/* Mobile Menu Toggle */}
+        <div
+          className="sm:hidden absolute top-5 h-14 w-14 z-50 bg-[rgb(var(--card))] border border-[rgb(var(--border))] shadow-md rounded-r-full items-center justify-center cursor-pointer hover:bg-[rgb(var(--card-hover))] transition-colors flex"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+        >
+          {sidebarOpen ? (
+            <PanelLeft className="w-6 h-6 text-[rgb(var(--cta))]" />
+          ) : (
+            <PanelRight className="w-6 h-6 text-[rgb(var(--cta))]" />
+          )}
+        </div>
+
         {/* Toggle Button for Desktop */}
         <div
           className="hidden sm:flex absolute top-5 h-14 w-14 z-50 bg-[rgb(var(--card))] border border-[rgb(var(--border))] shadow-md rounded-r-full items-center justify-center cursor-pointer hover:bg-[rgb(var(--card-hover))] transition-colors"
@@ -159,7 +172,7 @@ const ParkDetail: React.FC = () => {
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-x-hidden ml-0 sm:ml-0">
+        <main className="flex-1 overflow-x-hidden ml-0 sm:ml-0 border-[rgb(var(--border))] border-l-1">
           {/* Hero Section */}
           <section
             className="relative w-full top-0 z-30 flex items-end overflow-hidden"
@@ -219,11 +232,34 @@ const ParkDetail: React.FC = () => {
               <p className="text-lg leading-relaxed text-[rgb(var(--copy-secondary))] mb-6 whitespace-pre-line">
                 {park.description}
               </p>
+              <article id="photos" className="mb-10">
+                <ParkImageCarousel images={park.images.slice(0, 6)} />
+              </article>
               <WeatherCard weather={weather} loading={weatherLoading} />
+              {park.weatherInfo && (
+                <article
+                  id="weather-info"
+                  className="mx-auto mt-8 p-6 bg-[rgb(var(--background-alt))] border border-[rgb(var(--border))] rounded-3xl shadow-lg
+                           text-[rgb(var(--copy-primary))] font-sans select-text"
+                  aria-labelledby="weather-info-heading"
+                >
+                  <h2
+                    id="weather-info-heading"
+                    className="text-3xl font-extrabold mb-4 pb-2 border-b border-[rgb(var(--cta))] tracking-tight"
+                  >
+                    Weather Details
+                  </h2>
+
+                  <p
+                    className="text-lg leading-relaxed whitespace-pre-line text-[rgb(var(--copy-secondary))] 
+                             prose prose-invert prose-a:text-[rgb(var(--cta))] prose-a:hover:underline"
+                  >
+                    {park.weatherInfo}
+                  </p>
+                </article>
+              )}
             </article>
-            <article id="photos">
-              <ParkImageCarousel images={park.images.slice(0, 6)} />
-            </article>
+
             <article id="directions">
               <DirectionsCard
                 directionsInfo={park.directionsInfo}
@@ -285,17 +321,6 @@ const ParkDetail: React.FC = () => {
                 ))}
               </div>
             </article>
-
-            {park.weatherInfo && (
-              <article id="weather-info">
-                <h2 className="text-2xl font-semibold mb-2 border-b border-[rgb(var(--border))] pb-1">
-                  Weather Info
-                </h2>
-                <p className="text-[rgb(var(--copy-secondary))] whitespace-pre-line">
-                  {park.weatherInfo}
-                </p>
-              </article>
-            )}
 
             <div className="flex justify-center mt-8">
               <button
