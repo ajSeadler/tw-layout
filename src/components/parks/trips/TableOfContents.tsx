@@ -1,8 +1,18 @@
 import React from "react";
-import { X } from "lucide-react";
+import {
+  Activity,
+  Clock,
+  CreditCard,
+  Home,
+  Sun,
+  X,
+  Image,
+  Map,
+} from "lucide-react";
 import PopularParks from "./PopularParks";
 import QuickTips from "./QuickTips";
 import DidYouKnow from "./DidYouKnow";
+import FeaturedArticles from "./FeaturedArticles";
 
 interface TableOfContentsProps {
   open: boolean;
@@ -10,15 +20,13 @@ interface TableOfContentsProps {
 }
 
 const sections = [
-  { id: "overview", label: "Overview" },
-  { id: "photos", label: "Photos" },
-  { id: "weather-info", label: "Weather Info" },
-
-  { id: "directions", label: "Directions" },
-
-  { id: "hours", label: "Operating Hours" },
-  { id: "fees", label: "Entrance Fees" },
-  { id: "activities", label: "Activities & Topics" },
+  { id: "overview", label: "Overview", icon: Home },
+  { id: "photos", label: "Photos", icon: Image },
+  { id: "weather-info", label: "Weather Info", icon: Sun },
+  { id: "directions", label: "Directions", icon: Map },
+  { id: "hours", label: "Operating Hours", icon: Clock },
+  { id: "fees", label: "Entrance Fees", icon: CreditCard },
+  { id: "activities", label: "Activities & Topics", icon: Activity },
 ];
 
 const TableOfContents: React.FC<TableOfContentsProps> = ({ open, onClose }) => {
@@ -52,13 +60,14 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ open, onClose }) => {
 
           <h2 className="text-3xl font-semibold mb-8">Contents</h2>
           <nav className="space-y-4 text-lg font-medium">
-            {sections.map(({ id, label }) => (
+            {sections.map(({ id, label, icon: Icon }) => (
               <a
                 key={id}
                 href={`#${id}`}
                 onClick={onClose}
-                className="block px-4 py-3 rounded-2xl bg-[rgb(var(--card))] hover:bg-[rgb(var(--cta))] hover:text-white transition"
+                className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-[rgb(var(--card))] hover:bg-[rgb(var(--cta))] hover:text-white transition"
               >
+                <Icon className="w-5 h-5 text-[rgb(var(--copy-primary))]" />
                 {label}
               </a>
             ))}
@@ -76,13 +85,14 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ open, onClose }) => {
         <div>
           <h2 className="text-2xl font-semibold mb-6">Contents</h2>
           <nav className="space-y-3 text-base font-medium">
-            {sections.map(({ id, label }) => (
+            {sections.map(({ id, label, icon: Icon }) => (
               <a
                 key={id}
                 href={`#${id}`}
                 onClick={onClose}
-                className="block px-4 py-3 rounded-xl hover:bg-[rgb(var(--cta))] hover:text-white transition"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[rgb(var(--cta))] hover:text-white transition"
               >
+                <Icon className="w-5 h-5 text-[rgb(var(--copy-primary))]" />
                 {label}
               </a>
             ))}
@@ -93,6 +103,7 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ open, onClose }) => {
           <PopularParks onClose={onClose} />
           <QuickTips />
           <DidYouKnow />
+          <FeaturedArticles />
         </div>
       </aside>
     </>

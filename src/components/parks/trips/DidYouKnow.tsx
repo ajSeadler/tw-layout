@@ -23,15 +23,13 @@ const DidYouKnow: React.FC = () => {
         style={{ zIndex: 0 }}
       />
 
-      <div className="relative z-10 flex items-center gap-2 mb-5">
-        <Lightbulb className="w-8 h-8 text-[rgba(var(--cta))]" />
-        <h2
-          className="text-2xl font-semibold tracking-wide"
-          style={{ color: `rgb(var(--copy-primary))` }}
-        >
-          Did You Know?
-        </h2>
-      </div>
+      <Lightbulb className="w-8 h-8 text-[rgba(var(--cta))] mb-3 " />
+      <h2
+        className="text-2xl font-semibold tracking-wide mb-2"
+        style={{ color: `rgb(var(--copy-primary))` }}
+      >
+        Did You Know?
+      </h2>
 
       <ul
         className="space-y-3 text-sm leading-snug"
