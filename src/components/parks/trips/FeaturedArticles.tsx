@@ -29,7 +29,7 @@ const FeaturedArticles: React.FC = () => {
           throw new Error("API key not found in environment variables.");
 
         const response = await fetch(
-          `https://developer.nps.gov/api/v1/articles?limit=20&api_key=${apiKey}`
+          `https://developer.nps.gov/api/v1/articles?limit=0&api_key=${apiKey}`
         );
 
         if (!response.ok) {
@@ -43,7 +43,7 @@ const FeaturedArticles: React.FC = () => {
           .map((item: any) => ({
             id: item.id,
             title: item.title,
-            url: item.url,
+            url: item.url, // URL from the API field exactly
             listingDescription: item.listingDescription,
             listingImage: item.listingImage
               ? {
